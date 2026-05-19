@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RİBA - Anket Formu</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 15px; }
+        .container { background-color: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 700px; margin: 20px auto; }
+        .header { text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 15px; margin-bottom: 25px; }
+        .header h2 { color: #2c3e50; margin: 5px 0; }
+        .info-box { background-color: #ebf5fb; padding: 12px; border-radius: 5px; font-size: 14px; color: #2c3e50; margin-bottom: 20px; }
+        .madde-kart { background-color: #fff; border: 1px solid #d6dbdf; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .madde-no { font-weight: bold; color: #2980b9; font-size: 16px; margin-bottom: 10px; }
+        .secenek-btn { display: block; width: 100%; text-align: left; background: #f8f9f9; border: 2px solid #bdc3c7; padding: 14px; border-radius: 6px; margin-top: 10px; cursor: pointer; font-size: 15px; transition: all 0.2s; }
+        .secenek-btn:hover { background: #ebf5fb; border-color: #3498db; }
+        .secenek-btn.active { background: #d4efdf; border-color: #2ecc71; font-weight: bold; }
+        .progress-bar { background: #e5e7e9; height: 10px; border-radius: 5px; margin-bottom: 25px; overflow: hidden; }
+        .progress-fill { background: #2ecc71; height: 100%; width: 0%; transition: width 0.3s; }
+        .submit-btn { width: 100%; background-color: #3498db; color: white; padding: 16px; border: none; border-radius: 6px; font-size: 18px; cursor: pointer; font-weight: bold; display: none; margin-top: 20px; }
+        .submit-btn:hover { background-color: #2980b9; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>Rehberlik İhtiyaç Belirleme Anketi</h2>
+        <small id="kullanici_bilgi" style="color: #7f8c8d; font-weight: bold;"></small>
+    </div>
+
+    <div class="info-box">
+        <strong>Nasıl Doldurulur?</strong> Aşağıdaki maddeleri okuyun ve her madde için size/çocuğunuza en uygun olan <strong>yalnızca bir seçeneği</strong> tıklayarak yeşil hale getirin.
+    </div>
+
+    <div class="progress-bar">
+        <div id="ilerleme" class="progress-fill"></div>
+    </div>
+
+    <div id="anket_maddeleri"></div>
+
+    <button id="kaydet_butonu" class="submit-btn" onclick="anketiKaydet()">Anketi Tamamla ve Gönder</button>
+</div>
+
+<script>
+// Sayfa açıldığında URL'den öğrenci_id ve tip bilgisini alıyoruz
+const urlParams = new URLSearchParams(window.location.search);
+const ogrenciId = urlParams.get('ogrenci_id');
+const tip = urlParams.get('tip'); // 'Ogrenci' mi 'Veli' mi?
+
+// Sadece test amaçlı ilk 3 MEB maddesini ekliyoruz (Bir sonraki adımda tüm listeyi otomatik bağlayacağız)
+const maddelerVerisi = [
+    {
+        "kod": "M12",
+        "A": "Sorunları tanımlayıp çeşitli çözümler içinden en mantıklı olanı uygulamak.",
+        "B": "Sorunlar karşısında ne yapacağımı bilemeyip başkalarının çözmesini beklemek."
+    },
+    {
+        "kod": "M30",
+        "A": "Kendime uygun ders çalışma becerilerini geliştirmek (plan yapmak, not çıkarmak vb.).",
+        "B": "Ders çalışırken dikkatimi dağıtacak şeylerle (telefon/tablet) ilgilenmek."
+    },
+    {
+        "kod": "M08",
+        "A": "Hayatımla ilgili konularda (kıyafet, arkadaş, okul seçimi) kendim karar vermek.",
+        "B": "Benim adıma her zaman ailemin veya başkalarının karar vermesini istemek."
+    }
+];
+
+// Kullanıcının seçtiği yanıtları bu obje içinde biriktireceğiz
+let secilenYanitlar = {};
+
+// Formu ekrana basan fonksiyon
+function anket Olustur() {
+    document.getElementById('kullanici_bilgi').innerText = `${tip == 'Veli' ? 'Veli Formu' : 'Öğrenci Formu'} - Kayıt No: ${ogrenciId}`;
+    const container = document.getElementById('anket_maddeleri');
+    
+    maddelerVerisi.forEach((madde, index) => {
+        const kart = document.createElement('div');
+        kart.className = 'madde-kart';
+        kart.innerHTML = `
+            <div class="madde-no">Soru ${index + 1}</div>
+            <button class="secenek-btn" id="${madde.kod}_A" onclick="secimYap('${madde.kod}', 'A')"><strong>A)</strong> ${madde.A}</button>
+            <button class="secenek-btn" id="${madde.kod}_B" onclick="secimYap('${madde.kod}', 'B')"><strong>B)</strong> ${madde.B}</button>
+        `;
+        container.appendChild(kart);
+    });
+}
+
+function secimYap(maddeKod, secenek) {
+    // Önce o maddedeki iki butonun da aktifliğini kaldır
+    document.getElementById(`${maddeKod}_A`).classList.remove('active');
+    document.getElementById(`${maddeKod}_B`).classList.remove('active');
+    
+    // Tıklanan butonu yeşil yap
+    document.getElementById(`${maddeKod}_${secenek}`).classList.add('active');
+    
+    // MEB mantığı: Seçilen şık 1 puan, diğeri 0 puan
+    secilenYanitlar[maddeKod] = {
+        "A": secenek === 'A' ? 1 : 0,
+        "B": secenek === 'B' ? 1 : 0
+    };
+    
+    ilerlemeGuncelle();
+}
+
+function ilerlemeGuncelle() {
+    const toplamSoru = maddelerVerisi.length;
+    const cevaplanan = Object.keys(secilenYanitlar).length;
+    const yuzde = (cevaplanan / toplamSoru) * 100;
+    
+    document.getElementById('ilerleme').style.width = yuzde + '%';
+    
+    // Tüm sorular bittiyse "Gönder" butonunu göster
+    if (cevaplanan === toplamSoru) {
+        document.getElementById('kaydet_butonu').style.display = 'block';
+    }
+}
+
+function anketiKaydet() {
+    // Veritabanına göndermek üzere veriyi paketliyoruz
+    const paket = {
+        ogrenci_id: ogrenciId,
+        dolduran_tipi: tip,
+        cevaplar: secilenYanitlar
+    };
+
+    fetch('/anket-kaydet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paket)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.durum === 'basarili') {
+            alert('Anketiniz başarıyla kaydedilmiştir. Katkılarınız için teşekkür ederiz!');
+            window.location.href = '/'; // Ana sayfaya döndür
+        } else {
+            alert('Hata: ' + data.mesaj);
+        }
+    });
+}
+
+// Formu başlat
+anketOlustur();
+</script>
+</body>
+</html>

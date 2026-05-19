@@ -44,6 +44,41 @@ def anket_formu():
     ogrenci_id = request.args.get('ogrenci_id')
     tip = request.args.get('tip') # 'Ogrenci' mi 'Veli' mi?
     return f"Tebrikler! Doğrulama Başarılı. {tip} Anketi Sayfası Bir Sonraki Adımda Buraya Gelecek. Öğrenci ID: {ogrenci_id}"
+# URL'den gelen istek doğrultusunda anket sayfasını açar
+@app.route('/anket-formu')
+def anket_formu():
+    return render_template('anket.html')
 
+# Form bittiğinde gelen verileri Supabase'e kaydeden fonksiyon
+@app.route('/anket-kaydet', methods=['POST'])
+def anket_kaydet():
+    if not supabase:
+        return jsonify({"durum": "hata", "mesaj": "Veritabanı bağlantısı yok."}), 500
+
+    veri = request.get_json()
+    ogrenci_id = veri.get('ogrenci_id')
+    dolduran_tipi = veri.get('dolduran_tipi') # 'Ogrenci' veya 'Veli'
+    cevaplar = veri.get('cevaplar')
+
+    try:
+        # 1. Şu an aktif olan dönem ID'sini bulalım
+        donem_sorgu = supabase.table("donemler").select("id").eq("aktif_mi", True).execute()
+        if not donem_sorgu.data:
+            return jsonify({"durum": "hata", "mesaj": "Aktif bir anket dönemi bulunamadı."}), 400
+        donem_id = donem_sorgu.data[0]['id']
+
+        # 2. Veritabanına kaydı ekle (Eğer daha önce doldurduysa UNIQUE kuralından dolayı hata verir, mükerrer kaydı önler)
+        response = supabase.table("riba_cevaplari").insert({
+            "donem_id": donem_id,
+            "ogrenci_id": ogrenci_id,
+            "dolduran_tipi": dolduran_tipi,
+            "cevaplar": cevaplar
+        }).execute()
+
+        return jsonify({"durum": "basarili", "mesaj": "Cevaplar kalıcı olarak kaydedildi!"})
+
+    except Exception as e:
+        # Aynı kişi tekrar doldurmaya çalışırsa buraya düşer
+        return jsonify({"durum": "hata", "mesaj": "Bu öğrenci/veli için daha önce anket doldurulmuş."}), 400
 if __name__ == '__main__':
     app.run(debug=True)
