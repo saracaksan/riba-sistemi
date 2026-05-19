@@ -5,29 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RİBA - Rehberlik İhtiyaç Belirleme Anketi</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 600px; text-align: center; }
-        h1 { color: #2c3e50; font-size: 24px; }
-        p { color: #555; line-height: 1.6; font-size: 16px; text-align: justify; }
-        .btn { display: inline-block; background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-size: 18px; margin-top: 20px; transition: background 0.3s; }
-        .btn:hover { background-color: #2980b9; }
-        .footer { margin-top: 30px; font-size: 12px; color: #aaa; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f7f6; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .container { 
+            background-color: white; 
+            padding: 35px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+            max-width: 600px; 
+            width: 100%;
+            text-align: center; 
+        }
+        h1 { 
+            color: #1f4e78; 
+            font-size: 24px; 
+            margin-top: 15px; 
+            margin-bottom: 20px;
+        }
+        p { 
+            color: #4a5568; 
+            line-height: 1.7; 
+            font-size: 16px; 
+            text-align: justify; 
+            margin-bottom: 15px;
+        }
+        .btn { 
+            display: block; 
+            background-color: #3498db; 
+            color: white; 
+            padding: 16px 24px; 
+            text-decoration: none; 
+            border-radius: 6px; 
+            font-size: 18px; 
+            margin-top: 30px; 
+            font-weight: bold; 
+            transition: background 0.3s, transform 0.1s; 
+            box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
+        }
+        .btn:hover { 
+            background-color: #2980b9; 
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .footer { 
+            margin-top: 35px; 
+            font-size: 13px; 
+            color: #a0aec0; 
+            border-top: 1px solid #e2e8f0; 
+            padding-top: 15px; 
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <img src="https://upload.wikimedia.org/wikipedia/tr/b/b8/T.C._Mill%C3%AE_E%C4%9Fitim_Bakanl%C4%B1%C4%9F%C4%B1_Logo.svg" alt="MEB Logo" style="width: 80px; margin-bottom: 15px;">
+    <img src="https://upload.wikimedia.org/wikipedia/tr/b/b8/T.C._Mill%C3%AE_E%C4%9Fitim_Bakanl%C4%B1%C4%9F%C4%B1_Logo.svg" alt="MEB Logo" style="width: 100px; height: auto; margin-bottom: 10px;">
+    
     <h1>Rehberlik İhtiyaç Belirleme Anketi (RİBA)</h1>
     
     <p><strong>Sayın Velimiz / Sevgili Öğrencimiz,</strong></p>
-    <p>Bu anket, okulumuzdaki rehberlik ve psikolojik danışma hizmetlerinin sizlerin gerçek ihtiyaçlarına göre planlanması amacıyla hazırlanmıştır. Vereceğiniz cevaplar <strong>kesinlikle gizli tutulacak</strong> olup, sadece okul geneli eğitim programlarının düzenlenmesinde kullanılacaktır.</p>
-    <p>Lütfen soruları okurken size veya çocuğunuza en uygun olan seçeneği işaretleyiniz. Katkılarınız, daha iyi bir eğitim ortamı sunabilmemiz için çok değerlidir.</p>
+    <p>Bu anket, okulumuzdaki rehberlik ve psikolojik danışma hizmetlerinin sizlerin ve çocuklarınızın gerçek ihtiyaçlarına göre planlanması amacıyla çevrimiçi ortamda hazırlanmıştır. Vereceğiniz cevaplar <strong>kesinlikle gizli tutulacak</strong> olup, sadece okul geneli eğitim programlarının düzenlenmesinde kullanılacaktır.</p>
+    <p>Lütfen soruları dikkatlice okuyarak size veya çocuğunuza en uygun olan seçeneği işaretleyiniz. Katkılarınız, daha iyi bir eğitim ortamı sunabilmemiz için çok değerlidir.</p>
     
-    <a href="/giris" class="btn">Ankete Başlamak İçin Tıklayın</a>
+    <a href="/giris" class="btn">Giriş Yap ve Ankete Başla</a>
     
     <div class="footer">
-        Rehberlik Servisi Çevrimiçi Değerlendirme Sistemi
+        Okul Rehberlik Servisi Çevrimiçi Değerlendirme Otomasyonu
     </div>
 </div>
 

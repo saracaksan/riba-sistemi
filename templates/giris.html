@@ -3,46 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RİBA - Giriş Ekranı</title>
+    <title>RİBA - Öğrenci / Veli Girişi</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 450px; width: 100%; text-align: center; }
-        h2 { color: #2c3e50; margin-bottom: 20px; }
-        .form-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; margin-bottom: 8px; color: #34495e; font-weight: bold; }
-        input[type="number"], select { width: 100%; padding: 12px; border: 1px solid #bdc3c7; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
-        .btn { width: 100%; background-color: #2ecc71; color: white; padding: 14px; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; font-weight: bold; transition: background 0.3s; }
-        .btn:hover { background-color: #27ae60; }
-        .error-msg { color: #e74c3c; margin-top: 15px; font-weight: bold; display: none; }
-        .welcome-box { background-color: #e8f8f5; border: 1px solid #a3e4d7; padding: 15px; border-radius: 5px; margin-top: 15px; display: none; text-align: left; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f7f6; 
+            margin: 0; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        .container { 
+            background-color: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+            max-width: 450px; 
+            width: 100%; 
+            text-align: center; 
+        }
+        h2 { 
+            color: #1f4e78; 
+            margin-bottom: 25px; 
+            font-size: 22px;
+        }
+        .form-group { 
+            margin-bottom: 20px; 
+            text-align: left; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            color: #2c3e50; 
+            font-weight: bold; 
+            font-size: 15px;
+        }
+        input[type="number"], select { 
+            width: 100%; 
+            padding: 14px; 
+            border: 2px solid #cbd5e1; 
+            border-radius: 6px; 
+            font-size: 16px; 
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus, select:focus {
+            border-color: #3498db;
+        }
+        .btn { 
+            width: 100%; 
+            background-color: #2ecc71; 
+            color: white; 
+            padding: 15px; 
+            border: none; 
+            border-radius: 6px; 
+            font-size: 18px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: background 0.3s, transform 0.1s; 
+            margin-top: 10px;
+            box-shadow: 0 3px 6px rgba(46, 204, 113, 0.3);
+        }
+        .btn:hover { 
+            background-color: #27ae60; 
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+        .error-msg { 
+            color: #e74c3c; 
+            margin-top: 15px; 
+            font-weight: bold; 
+            font-size: 14px;
+            background-color: #fce4d6;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #f5b041;
+            display: none; 
+        }
+        .welcome-box { 
+            background-color: #e8f8f5; 
+            border: 2px solid #2ecc71; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin-top: 20px; 
+            display: none; 
+            text-align: left; 
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .welcome-box p {
+            margin: 6px 0;
+            color: #2c3e50;
+            font-size: 15px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Öğrenci / Veli Doğrulama</h2>
+    <h2>Öğrenci / Veli Kimlik Doğrulama</h2>
     
     <div class="form-group">
-        <label for="okul_no">Öğrenci Okul Numarası:</label>
-        <input type="number" id="okul_no" placeholder="Örn: 145" oninput="ogrenciSorgula()">
+        <label for="okul_no">Öğrenci Okul Numarasını Giriniz:</label>
+        <input type="number" id="okul_no" placeholder="Örn: 103" oninput="ogrenciSorgula()" autocomplete="off">
     </div>
 
-    <div id="hoşgeldin_alani" class="welcome-box">
-        <p><strong>Öğrenci:</strong> <span id="ogrenci_adi">...</span></p>
-        <p><strong>Sınıfı:</strong> <span id="sinif_adi">...</span></p>
+    <div id="welcome_box" class="welcome-box">
+        <p><strong>Öğrenci Adı Soyadı:</strong> <span id="ogrenci_adi" style="color:#27ae60; font-weight:bold;">...</span></p>
+        <p><strong>Kayıtlı Sınıfı:</strong> <span id="sinif_adi" style="font-weight:bold;">...</span></p>
         
-        <div class="form-group" style="margin-top: 15px;">
-            <label for="anket_tipi">Anketi Kim Dolduruyor?</label>
+        <div class="form-group" style="margin-top: 15px; margin-bottom: 15px;">
+            <label for="anket_tipi">Sisteme Kim Giriş Yapıyor?</label>
             <select id="anket_tipi">
-                <option value="Ogrenci">Ben Öğrenciyim (Kendim dolduruyorum)</option>
-                <option value="Veli">Ben Veliyim (Çocuğum için dolduruyorum)</option>
+                <option value="Ogrenci">Ben Öğrenciyim (Kendim dolduracağım)</option>
+                <option value="Veli">Ben Veliyim (Çocuğum adına dolduracağım)</option>
             </select>
         </div>
         
-        <button class="btn" onclick="anketeBasla()">Anketi Başlat</button>
+        <button class="btn" onclick="anketeBasla()">Doğrulamayı Onayla ve Başla</button>
     </div>
 
-    <div id="hata_mesaji" class="error-msg">Bu okul numarasına ait bir öğrenci bulunamadı. Lütfen numarayı kontrol ediniz.</div>
+    <div id="hata_mesaji" class="error-msg">
+        Girdiğiniz numaraya ait bir kayıt bulunamadı. Lütfen numarayı kontrol ediniz veya idareye başvurunuz.
+    </div>
 </div>
 
 <script>
@@ -50,16 +140,17 @@ let bulunanOgrenciId = null;
 
 function ogrenciSorgula() {
     const okulNo = document.getElementById('okul_no').value;
-    const hosgeldinAlani = document.getElementById('hoşgeldin_alani');
+    const welcomeBox = document.getElementById('welcome_box');
     const hataMesaji = document.getElementById('hata_mesaji');
 
+    // Numara kutusu boşsa her şeyi gizle
     if (okulNo.length < 1) {
-        hosgeldinAlani.style.display = 'none';
+        welcomeBox.style.display = 'none';
         hataMesaji.style.display = 'none';
         return;
     }
 
-    // Arka planda Python'a soruyoruz: "Bu numarada kim var?"
+    // Python backend'e saniyeler içinde canlı sorgu atılıyor
     fetch(`/ogrenci-sorgula/${okulNo}`)
         .then(response => response.json())
         .then(data => {
@@ -68,23 +159,26 @@ function ogrenciSorgula() {
                 document.getElementById('ogrenci_adi').innerText = data.veri.ad_soyad;
                 document.getElementById('sinif_adi').innerText = data.veri.siniflar.sinif_adi;
                 
-                hosgeldinAlani.style.display = 'block';
+                welcomeBox.style.display = 'block';
                 hataMesaji.style.display = 'none';
             } else {
-                hosgeldinAlani.style.display = 'none';
+                welcomeBox.style.display = 'none';
                 hataMesaji.style.display = 'block';
                 bulunanOgrenciId = null;
             }
         })
         .catch(err => {
-            console.error("Sorgulama hatası:", err);
+            console.error("Doğrulama hatası:", err);
+            welcomeBox.style.display = 'none';
+            hataMesaji.style.display = 'block';
+            bulunanOgrenciId = null;
         });
 }
 
 function anketeBasla() {
     const tip = document.getElementById('anket_tipi').value;
     if (bulunanOgrenciId) {
-        // Seçilen tipe göre (Öğrenci veya Veli) ilgili anket sayfasına yönlendiriyoruz
+        // Güvenli şekilde öğrenci ID ve dolduran tip parametrelerini asıl ankete taşıyoruz
         window.location.href = `/anket-formu?ogrenci_id=${bulunanOgrenciId}&tip=${tip}`;
     }
 }
