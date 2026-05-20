@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>İlçe MEM - Kapsamlı RİBA Paneli</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; margin: 0; color: #1e293b; }
+        .header { background: #b91c1c; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header h1 { margin: 0; font-size: 24px; }
+        .container { padding: 20px 30px; }
+        
+        /* Sekme Tasarımı */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; }
+        .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; color: #475569; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { background: #b91c1c; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        
+        .stat-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; text-align: center; border-bottom: 4px solid #b91c1c; }
+        .stat-box h2 { margin: 5px 0; font-size: 28px; color: #b91c1c; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #475569;}
+        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 5px; outline:none; }
+        .btn { padding: 10px; border: none; border-radius: 5px; color: white; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 5px; }
+        .btn-red { background: #b91c1c; } .btn-blue { background: #3498db; } .btn-green { background: #10b981; } .btn-dark { background: #334155; }
+        .btn-sm { width: auto; padding: 5px 10px; font-size: 12px; display: inline-block; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #fef2f2; color: #991b1b; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <h1>🏛️ İlçe Milli Eğitim Müdürlüğü</h1>
+        <small>İlçe Geneli Kapsamlı RİBA Yönetim ve Raporlama Merkezi</small>
+    </div>
+    <a href="/" style="color:white; text-decoration:none; font-weight:bold; background:#7f1d1d; padding:8px 15px; border-radius:5px;">🚪 Çıkış Yap</a>
+</div>
+
+<div class="container">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="sekmeAc('tab_okul')">1. Okul ve Şifre Yönetimi</button>
+        <button class="tab-btn" onclick="sekmeAc('tab_katilim'); veriGetir();">2. Anket Katılım Takibi</button>
+        <button class="tab-btn" onclick="sekmeAc('tab_rapor'); raporGetir();">3. RİBA Sonuç Raporları</button>
+    </div>
+
+    <div id="tab_okul" class="tab-content active">
+        <div class="grid-2">
+            <div class="card" style="border-top: 4px solid #b91c1c;">
+                <h3 style="margin-top:0;">Okul Tanımlama Alanı</h3>
+                <input type="hidden" id="edit_okul_id">
+                <div class="form-group"><label>Okul Adı:</label><input type="text" id="y_okul_adi"></div>
+                <div class="form-group"><label>Okul Kademesi:</label>
+                    <select id="y_kademe"><option value="İlkokul">İlkokul</option><option value="Ortaokul">Ortaokul</option><option value="Lise">Lise</option></select>
+                </div>
+                <div class="form-group"><label>Kurum Kodu (Okul İdaresi Kullanıcı Adı):</label><input type="number" id="y_kurum_kodu"></div>
+                <div class="form-group"><label>İdare Giriş Şifresi:</label><input type="text" id="y_sifre"></div>
+                
+                <button id="btn_kaydet" class="btn btn-red" onclick="okulKaydet()">Sisteme Ekle</button>
+                <button id="btn_guncelle" class="btn btn-blue" style="display:none;" onclick="okulGuncelle()">Güncelle</button>
+            </div>
+            
+            <div class="card">
+                <h3 style="margin-top:0;">Sistemdeki Okullar</h3>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table>
+                        <thead><tr><th>Kodu</th><th>Okul Adı</th><th>Şifre</th><th>İşlem</th></tr></thead>
+                        <tbody id="okul_listesi"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tab_katilim" class="tab-content">
+        <div class="card" style="background:#e0f2fe; border:1px solid #bae6fd;">
+            <label style="color:#0369a1;">Filtrele (Okul Seçin):</label>
+            <select id="filtre_okul_takip" onchange="veriGetir()" style="max-width:300px; display:inline-block; margin-right:10px;">
+                <option value="">-- Tüm İlçe Geneli --</option>
+            </select>
+            <button class="btn btn-blue btn-sm" onclick="veriGetir()">Sorgula</button>
+        </div>
+
+        <div class="grid-3" style="margin-bottom:20px;">
+            <div class="stat-box"><p>Sistemdeki Toplam Öğrenci</p><h2 id="lbl_toplam_ogr">0</h2></div>
+            <div class="stat-box" style="border-color:#10b981;"><p>Öğrenci Anketi Dolduran</p><h2 id="lbl_toplam_o_anket" style="color:#10b981;">0</h2></div>
+            <div class="stat-box" style="border-color:#8b5cf6;"><p>Veli Anketi Dolduran</p><h2 id="lbl_toplam_v_anket" style="color:#8b5cf6;">0</h2></div>
+        </div>
+
+        <div class="card" style="border-left: 5px solid #ef4444;">
+            <h3 style="margin-top:0; color:#ef4444;">Katılımı Eksik Kalan Sınıflar Radarı</h3>
+            <p style="font-size:12px; color:#64748b;">Mevcuduna göre %100 katılım sağlamamış sınıflar otomatik olarak burada listelenir.</p>
+            <table>
+                <thead><tr><th>Sınıf Adı</th><th>Sınıf Mevcudu</th><th>Dolduran Öğrenci</th><th>Dolduran Veli</th></tr></thead>
+                <tbody id="eksik_siniflar_listesi"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="tab_rapor" class="tab-content">
+        <div class="card" style="background:#f0fdf4; border:1px solid #bbf7d0;">
+            <div style="display:flex; gap:15px;">
+                <div style="flex:1;">
+                    <label>Kademe Filtresi:</label>
+                    <select id="filtre_kademe" onchange="raporGetir()"><option value="TUM">Tüm Kademeler</option><option value="İlkokul">İlkokullar</option><option value="Ortaokul">Ortaokullar</option><option value="Lise">Liseler</option></select>
+                </div>
+                <div style="flex:1;">
+                    <label>Belirli Okul:</label>
+                    <select id="filtre_okul_rapor" onchange="raporGetir()"><option value="">-- Tüm Okullar --</option></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 style="margin-top:0;">ASP Sonuç Tablosu (Ağırlıklı Standart Puan)</h3>
+            <table>
+                <thead style="background:#f1f5f9; color:#0f172a;">
+                    <tr><th>Kod</th><th>Rehberlik Hedef Maddesi</th><th>Öğrenci Frekansı (f)</th><th>Veli Frekansı (f)</th><th>Öğretmen Frekansı (f)</th><th>ASP Sonucu</th></tr>
+                </thead>
+                <tbody id="asp_tablosu"></tbody>
+            </table>
+            <button class="btn btn-green" style="margin-top:20px; font-size:16px;" onclick="window.location.href='/rapor/excel-indir'">Tüm İlçenin Resmi Excel Çıktısını İndir</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function sekmeAc(id) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    event.currentTarget.classList.add('active');
+}
+
+// Okul İşlemleri
+function okullariDoldur() {
+    fetch('/api/ilce/okullari-getir').then(r=>r.json()).then(data=>{
+        let tbl = '', selT = '<option value="">-- Tüm İlçe Geneli --</option>', selR = '<option value="">-- Tüm Okullar --</option>';
+        data.forEach(o => {
+            tbl += `<tr><td>${o.kurum_kodu}</td><td><b>${o.okul_adi}</b><br><small>${o.kademe}</small></td><td>${o.sifre}</td>
+            <td><button class="btn btn-red btn-sm" onclick="okulSil(${o.id})">Sil</button></td></tr>`;
+            selT += `<option value="${o.id}">${o.okul_adi}</option>`;
+            selR += `<option value="${o.id}">${o.okul_adi}</option>`;
+        });
+        document.getElementById('okul_listesi').innerHTML = tbl;
+        document.getElementById('filtre_okul_takip').innerHTML = selT;
+        document.getElementById('filtre_okul_rapor').innerHTML = selR;
+    });
+}
+
+function okulKaydet() {
+    const v = { okul_adi: document.getElementById('y_okul_adi').value, kademe: document.getElementById('y_kademe').value, kurum_kodu: document.getElementById('y_kurum_kodu').value, sifre: document.getElementById('y_sifre').value };
+    fetch('/api/ilce/okul-ekle', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(v) })
+    .then(r=>r.json()).then(d => { alert(d.mesaj); okullariDoldur(); });
+}
+function okulSil(id) {
+    if(confirm("Okulu silmek istediğinize emin misiniz?")) { fetch(`/api/ilce/okul-sil/${id}`, {method:'DELETE'}).then(()=>okullariDoldur()); }
+}
+
+// Katılım ve Eksik Sınıflar Takibi
+function veriGetir() {
+    const okId = document.getElementById('filtre_okul_takip').value;
+    fetch(`/api/takip/katilim-durumu?okul_id=${okId}`).then(r=>r.json()).then(d => {
+        document.getElementById('lbl_toplam_ogr').innerText = d.toplam_mevcut;
+        document.getElementById('lbl_toplam_o_anket').innerText = d.toplam_ogrenci_katilim;
+        document.getElementById('lbl_toplam_v_anket').innerText = d.toplam_veli_katilim;
+        
+        let html = '';
+        if(d.eksik_siniflar.length === 0) { html = '<tr><td colspan="4" style="text-align:center;">Tüm sınıflar %100 katılım sağlamıştır.</td></tr>'; }
+        else {
+            d.eksik_siniflar.forEach(s => {
+                html += `<tr><td><b>${s.sinif_adi}</b></td><td>${s.mevcut} Kişi</td><td style="color:red;">${s.ogrenci_katilim}</td><td style="color:red;">${s.veli_katilim}</td></tr>`;
+            });
+        }
+        document.getElementById('eksik_siniflar_listesi').innerHTML = html;
+    });
+}
+
+// ASP Raporları
+function raporGetir() {
+    const kademe = document.getElementById('filtre_kademe').value;
+    const okId = document.getElementById('filtre_okul_rapor').value;
+    fetch(`/api/rapor/analiz-veri?kademe=${kademe}&okul_id=${okId}`).then(r=>r.json()).then(data => {
+        let h = '';
+        data.forEach(m => {
+            h += `<tr><td><b>${m.kod}</b></td><td>${m.hedef_adi}</td><td>${m.ogrenci_f}</td><td>${m.veli_f}</td><td>${m.ogretmen_f}</td><td style="font-weight:bold; color:#10b981;">${m.asp}</td></tr>`;
+        });
+        document.getElementById('asp_tablosu').innerHTML = h;
+    });
+}
+
+window.onload = okullariDoldur;
+</script>
+</body>
+</html>

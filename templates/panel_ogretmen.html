@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sınıf Öğretmeni Paneli</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fffbeb; margin: 0; padding: 20px; color: #1e293b; }
+        .header { background: #d97706; color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #d97706; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px;}
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #fef3c7; color: #92400e; }
+        .tamam { color: #16a34a; font-weight: bold; }
+        .eksik { color: #dc2626; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <h1>👩‍🏫 Sınıf Öğretmeni Takip Paneli</h1>
+        <small>Sorumlu Olduğunuz Sınıfların Anket Katılım Durumu</small>
+    </div>
+    <a href="/" style="color:white; text-decoration:none; font-weight:bold; background:#b45309; padding:8px 15px; border-radius:5px;">🚪 Çıkış Yap</a>
+</div>
+
+<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <h3 style="margin-top:0;">Öğrenci ve Veli Takip Listesi</h3>
+            <p style="font-size:14px; color:#64748b; margin-bottom:0;">Sorumlu Olduğunuz Şubeler: <strong id="lbl_subeler" style="color:#d97706;">Yükleniyor...</strong></p>
+        </div>
+        <button style="background:#16a34a; color:white; border:none; padding:10px 15px; border-radius:5px; font-weight:bold; cursor:pointer;" onclick="window.location.href='/anket'">Kendi Öğretmen Anketimi Doldur</button>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Sınıfı</th>
+                <th>Okul No</th>
+                <th>Öğrenci Adı Soyadı</th>
+                <th>Öğrenci Anketi</th>
+                <th>Veli Anketi</th>
+            </tr>
+        </thead>
+        <tbody id="tbl_takip">
+            <tr><td colspan="5" style="text-align:center;">Yükleniyor...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+window.onload = function() {
+    fetch('/api/ogretmen/sinif-takip').then(r=>r.json()).then(data => {
+        document.getElementById('lbl_subeler').innerText = data.atanan_siniflar;
+        let h = '';
+        if(data.ogrenciler.length === 0) h = '<tr><td colspan="5" style="text-align:center;">Size atanan şubelerde henüz öğrenci bulunmamaktadır.</td></tr>';
+        else {
+            data.ogrenciler.forEach(o => {
+                let ogrDurum = o.ogrenci_durum === 'Tamamlandı' ? `<span class="tamam">✔ Tamamlandı</span>` : `<span class="eksik">❌ Eksik</span>`;
+                let velDurum = o.veli_durum === 'Tamamlandı' ? `<span class="tamam">✔ Tamamlandı</span>` : `<button style="background:#3b82f6; color:white; border:none; padding:4px 8px; border-radius:3px; font-size:11px;">Veliyi Uyar (Eksik)</button>`;
+                
+                h += `<tr><td><b>${o.sinif}</b></td><td>${o.no}</td><td>${o.ad_soyad}</td><td>${ogrDurum}</td><td>${velDurum}</td></tr>`;
+            });
+        }
+        document.getElementById('tbl_takip').innerHTML = h;
+    });
+};
+</script>
+</body>
+</html>

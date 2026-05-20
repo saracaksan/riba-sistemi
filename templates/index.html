@@ -3,86 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RİBA - Rehberlik İhtiyaç Belirleme Anketi</title>
+    <title>İlçe Milli Eğitim Müdürlüğü - RİBA Otomasyonu</title>
     <style>
-        * { box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f4f7f6; 
-            margin: 0; 
-            padding: 20px; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-        }
-        .container { 
-            background-color: white; 
-            padding: 35px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
-            max-width: 600px; 
-            width: 100%;
-            text-align: center; 
-        }
-        h1 { 
-            color: #1f4e78; 
-            font-size: 24px; 
-            margin-top: 15px; 
-            margin-bottom: 20px;
-        }
-        p { 
-            color: #4a5568; 
-            line-height: 1.7; 
-            font-size: 16px; 
-            text-align: justify; 
-            margin-bottom: 15px;
-        }
-        .btn { 
-            display: block; 
-            background-color: #3498db; 
-            color: white; 
-            padding: 16px 24px; 
-            text-decoration: none; 
-            border-radius: 6px; 
-            font-size: 18px; 
-            margin-top: 30px; 
-            font-weight: bold; 
-            transition: background 0.3s, transform 0.1s; 
-            box-shadow: 0 3px 6px rgba(52, 152, 219, 0.3);
-        }
-        .btn:hover { 
-            background-color: #2980b9; 
-        }
-        .btn:active {
-            transform: scale(0.98);
-        }
-        .footer { 
-            margin-top: 35px; 
-            font-size: 13px; 
-            color: #a0aec0; 
-            border-top: 1px solid #e2e8f0; 
-            padding-top: 15px; 
-        }
+        * { box-sizing: border-box; transition: all 0.2s ease; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; color: #1e293b; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .main-header { text-align: center; margin-bottom: 40px; border-bottom: 3px solid #b91c1c; padding-bottom: 15px; width: 100%; max-width: 1000px; }
+        .main-header h1 { color: #b91c1c; margin: 5px 0; font-size: 28px; }
+        .main-header p { color: #475569; font-weight: 600; margin: 0; }
+        
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; max-width: 1000px; }
+        @media (max-width: 768px) { .grid-container { grid-template-columns: 1fr; } }
+        
+        .panel { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid; }
+        .panel-student { border-top-color: #3498db; }
+        .panel-staff { border-top-color: #e67e22; }
+        
+        h2 { margin-top: 0; color: #334155; font-size: 22px; border-bottom: 2px solid #e2e8f0; padding-bottom: 12px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; color: #475569; }
+        input[type="text"], input[type="password"], input[type="number"], select { width: 100%; padding: 14px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; background: #f8fafc; }
+        input:focus, select:focus { border-color: #3498db; background: #fff; }
+        
+        .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
+        .btn:active { transform: scale(0.98); }
+        .btn-blue { background: #3498db; color: white; } .btn-blue:hover { background: #2980b9; }
+        .btn-orange { background: #e67e22; color: white; } .btn-orange:hover { background: #d35400; }
+        .btn-green { background: #10b981; color: white; } .btn-green:hover { background: #059669; }
+        .btn-purple { background: #8b5cf6; color: white; } .btn-purple:hover { background: #7c3aed; }
+        
+        .result-box { background: #f0fdf4; border: 2px solid #4ade80; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; text-align: center; }
+        .result-box h3 { margin: 0 0 10px 0; color: #166534; font-size: 18px; }
+        .action-buttons { display: flex; gap: 10px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <img src="https://upload.wikimedia.org/wikipedia/tr/b/b8/T.C._Mill%C3%AE_E%C4%9Fitim_Bakanl%C4%B1%C4%9F%C4%B1_Logo.svg" alt="MEB Logo" style="width: 100px; height: auto; margin-bottom: 10px;">
-    
-    <h1>Rehberlik İhtiyaç Belirleme Anketi (RİBA)</h1>
-    
-    <p><strong>Sayın Velimiz / Sevgili Öğrencimiz,</strong></p>
-    <p>Bu anket, okulumuzdaki rehberlik ve psikolojik danışma hizmetlerinin sizlerin ve çocuklarınızın gerçek ihtiyaçlarına göre planlanması amacıyla çevrimiçi ortamda hazırlanmıştır. Vereceğiniz cevaplar <strong>kesinlikle gizli tutulacak</strong> olup, sadece okul geneli eğitim programlarının düzenlenmesinde kullanılacaktır.</p>
-    <p>Lütfen soruları dikkatlice okuyarak size veya çocuğunuza en uygun olan seçeneği işaretleyiniz. Katkılarınız, daha iyi bir eğitim ortamı sunabilmemiz için çok değerlidir.</p>
-    
-    <a href="/giris" class="btn">Giriş Yap ve Ankete Başla</a>
-    
-    <div class="footer">
-        Okul Rehberlik Servisi Çevrimiçi Değerlendirme Otomasyonu
-    </div>
+<div class="main-header">
+    <img src="dargecitmem.jpg" alt="MEB Logo" style="width: 75px;">
+    <h1>RİBA İlçe Çevrimiçi Değerlendirme Sistemi</h1>
+    <p>Öğrenci, Veli ve Personel Ortak Giriş Portalı</p>
 </div>
+
+<div class="grid-container">
+
+    <div class="panel panel-student">
+        <h2>🧑‍🎓 Öğrenci & Veli Girişi</h2>
+        
+        <div class="form-group">
+            <label for="ddl_okul">1. Öğrenim Gördüğünüz Okulu Seçiniz:</label>
+            <select id="ddl_okul">
+                <option value="">Okullar Yükleniyor...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="ogr_no">2. Öğrenci Okul Numarası:</label>
+            <input type="number" id="ogr_no" placeholder="Numarayı giriniz..." autocomplete="off">
+        </div>
+        
+        <button class="btn btn-blue" onclick="ogrenciDogrula()">Sorgula ve Doğrula</button>
+
+        <div id="dogrulama_alani" class="result-box">
+            <h3>Doğrulanan Öğrenci: <span id="lbl_ogr_ad"></span></h3>
+            <span style="display:block; margin-bottom:15px; color:#475569; font-weight:bold;">Sınıfı: <span id="lbl_ogr_sinif"></span></span>
+            
+            <p style="font-size:13px; color:#64748b; margin-bottom:15px;">Lütfen anketi dolduracak kişiye uygun butonu seçiniz:</p>
+            
+            <div class="action-buttons">
+                <button class="btn btn-green" onclick="anketeGit('Ogrenci')">Öğrenci Anketi</button>
+                <button class="btn btn-purple" onclick="anketeGit('Veli')">Veli Anketi</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-staff">
+        <h2>💼 MEB Personel Girişi</h2>
+        <p style="font-size:14px; color:#64748b; margin-bottom:20px; line-height:1.5;">İlçe MEM yöneticileri, okul idarecileri, rehber öğretmenler ve sınıf öğretmenleri bu alandan giriş yapmalıdır.</p>
+        
+        <div class="form-group">
+            <label for="per_kadi">Kullanıcı Adı (İlçe, Kurum Kodu veya Öğretmen Adı):</label>
+            <input type="text" id="per_kadi" autocomplete="off">
+        </div>
+        
+        <div class="form-group">
+            <label for="per_sifre">Giriş Şifreniz:</label>
+            <input type="password" id="per_sifre" autocomplete="new-password">
+        </div>
+        
+        <button class="btn btn-orange" onclick="personelLogin()">Sisteme Giriş Yap</button>
+    </div>
+
+</div>
+
+<script>
+let seciliOgrenciId = null;
+
+// Sayfa açıldığında ilçedeki okulları veritabanından çekip listeye ekle
+window.onload = function() {
+    fetch('/api/okullari-getir').then(res => res.json()).then(data => {
+        const ddl = document.getElementById('ddl_okul');
+        ddl.innerHTML = '<option value="">Lütfen Okulunuzu Seçiniz...</option>';
+        data.forEach(okul => {
+            ddl.innerHTML += `<option value="${okul.id}">${okul.okul_adi}</option>`;
+        });
+    });
+};
+
+function ogrenciDogrula() {
+    const okul_id = document.getElementById('ddl_okul').value;
+    const okul_no = document.getElementById('ogr_no').value;
+    
+    if(!okul_id || !okul_no) { alert("Lütfen okul seçimi yapın ve numarayı girin."); return; }
+    
+    fetch('/api/ogrenci-giris', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ okul_id: okul_id, okul_no: okul_no })
+    }).then(res => res.json()).then(data => {
+        if(data.durum === 'basarili') {
+            seciliOgrenciId = data.id;
+            document.getElementById('lbl_ogr_ad').innerText = data.ad_soyad;
+            document.getElementById('lbl_ogr_sinif').innerText = data.sinif;
+            document.getElementById('dogrulama_alani').style.display = 'block';
+        } else {
+            alert(data.mesaj);
+            document.getElementById('dogrulama_alani').style.display = 'none';
+        }
+    });
+}
+
+function anketeGit(tip) {
+    if(seciliOgrenciId) {
+        window.location.href = `/anket?ogrenci_id=${seciliOgrenciId}&tip=${tip}`;
+    }
+}
+
+function personelLogin() {
+    const k_adi = document.getElementById('per_kadi').value;
+    const sifre = document.getElementById('per_sifre').value;
+    
+    if(!k_adi || !sifre) { alert("Bilgileri eksiksiz giriniz."); return; }
+    
+    fetch('/api/personel-login', {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ kullanici_adi: k_adi, sifre: sifre })
+    }).then(res => res.json()).then(data => {
+        if(data.durum === 'basarili') {
+            window.location.href = data.yonlendir; // İlçe, okul veya öğretmen paneline yetkiye göre fırlatır
+        } else {
+            alert(data.mesaj);
+        }
+    });
+}
+</script>
 
 </body>
 </html>

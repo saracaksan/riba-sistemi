@@ -3,259 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RİBA - Anket Formu</title>
+    <title>RİBA - Rehberlik İhtiyaç Belirleme Anketi</title>
     <style>
         * { box-sizing: border-box; }
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f4f7f6; 
-            margin: 0; 
-            padding: 10px; 
-        }
-        .container { 
-            background-color: white; 
-            padding: 25px; 
-            border-radius: 12px; 
-            box-shadow: 0 4px 15 rgba(0,0,0,0.06); 
-            max-width: 700px; 
-            margin: 15px auto; 
-        }
-        .header { 
-            text-align: center; 
-            border-bottom: 3px solid #3498db; 
-            padding-bottom: 15px; 
-            margin-bottom: 20px; 
-        }
-        .header h2 { 
-            color: #2c3e50; 
-            margin: 5px 0; 
-            font-size: 20px;
-        }
-        #kullanici_bilgi {
-            display: block;
-            margin-top: 5px;
-            color: #7f8c8d;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .info-box { 
-            background-color: #ebf5fb; 
-            padding: 14px; 
-            border-radius: 6px; 
-            font-size: 15px; 
-            color: #2c3e50; 
-            margin-bottom: 20px; 
-            line-height: 1.5;
-            text-align: justify;
-        }
-        .progress-container {
-            background: #e5e7e9; 
-            height: 12px; 
-            border-radius: 6px; 
-            margin-bottom: 25px; 
-            overflow: hidden; 
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .progress-fill { 
-            background: #2ecc71; 
-            height: 100%; 
-            width: 0%; 
-            transition: width 0.3s ease; 
-        }
-        .madde-kart { 
-            background-color: #fff; 
-            border: 1px solid #e2e8f0; 
-            padding: 20px; 
-            border-radius: 8px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02); 
-        }
-        .madde-no { 
-            font-weight: bold; 
-            color: #2980b9; 
-            font-size: 16px; 
-            margin-bottom: 12px; 
-            border-bottom: 1px dashed #d6dbdf;
-            padding-bottom: 5px;
-        }
-        .secenek-btn { 
-            display: block; 
-            width: 100%; 
-            text-align: left; 
-            background: #f8f9f9; 
-            border: 2px solid #cbd5e1; 
-            padding: 15px; 
-            border-radius: 6px; 
-            margin-top: 10px; 
-            cursor: pointer; 
-            font-size: 15px; 
-            line-height: 1.5;
-            color: #334155;
-            transition: all 0.2s ease; 
-            outline: none;
-        }
-        .secenek-btn:hover { 
-            background: #f1f5f9; 
-            border-color: #94a3b8; 
-        }
-        .secenek-btn.active { 
-            background: #d4efdf; 
-            border-color: #2ecc71; 
-            color: #1e3a1e;
-            font-weight: bold; 
-            box-shadow: 0 2px 4px rgba(46, 204, 113, 0.15);
-        }
-        .submit-btn { 
-            width: 100%; 
-            background-color: #3498db; 
-            color: white; 
-            padding: 16px; 
-            border: none; 
-            border-radius: 6px; 
-            font-size: 18px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            display: none; 
-            margin-top: 25px; 
-            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
-            transition: background 0.2s;
-        }
-        .submit-btn:hover { 
-            background-color: #2980b9; 
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f1f5f9; margin: 0; padding: 20px; }
+        .container { background-color: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; border-bottom: 4px solid #b91c1c; padding-bottom: 20px; margin-bottom: 25px; }
+        .header h2 { color: #b91c1c; margin: 10px 0 5px 0; font-size: 26px; }
+        
+        .info-box { background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 5px solid #3b82f6; padding: 20px; border-radius: 8px; font-size: 14px; color: #334155; margin-bottom: 25px; line-height: 1.6; text-align: justify; }
+        .info-box strong { color: #1e293b; }
+
+        .progress-sticky { position: sticky; top: 0; background: white; padding: 10px 0; z-index: 10; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px;}
+        .progress-container { background: #e2e8f0; height: 14px; border-radius: 7px; overflow: hidden; width: 100%;}
+        .progress-fill { background: #10b981; height: 100%; width: 0%; transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-text { font-size: 13px; font-weight: bold; color: #64748b; text-align: right; margin-top: 5px;}
+        
+        .madde-kart { background-color: #fff; border: 1px solid #cbd5e1; padding: 25px; border-radius: 10px; margin-bottom: 20px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
+        .madde-kart:hover { border-color: #94a3b8; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .madde-no { font-weight: bold; color: #1e3a8a; font-size: 17px; margin-bottom: 15px; border-bottom: 2px dashed #e2e8f0; padding-bottom: 10px; }
+        
+        .secenek-btn { display: block; width: 100%; text-align: left; background: #f8fafc; border: 2px solid #cbd5e1; padding: 18px; border-radius: 8px; margin-top: 12px; cursor: pointer; font-size: 15px; line-height: 1.5; color: #1e293b; transition: all 0.2s ease; outline: none; }
+        .secenek-btn:hover { background: #e2e8f0; border-color: #94a3b8; }
+        .secenek-btn.active { background: #ecfdf5; border-color: #10b981; color: #065f46; font-weight: bold; box-shadow: 0 2px 5px rgba(16, 185, 129, 0.15); }
+        
+        .submit-btn { width: 100%; background-color: #10b981; color: white; padding: 20px; border: none; border-radius: 10px; font-size: 20px; cursor: pointer; font-weight: bold; margin-top: 30px; transition: 0.3s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .submit-btn:hover { background-color: #059669; transform: translateY(-2px); }
+        .submit-btn:active { transform: translateY(0); }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
+        <img src="https://upload.wikimedia.org/wikipedia/tr/b/b8/T.C._Mill%C3%AE_E%C4%9Fitim_Bakanl%C4%B1%C4%9F%C4%B1_Logo.svg" alt="MEB Logo" style="width: 70px; margin-bottom: 10px;">
         <h2>Rehberlik İhtiyaç Belirleme Anketi (RİBA)</h2>
-        <span id="kullanici_bilgi">Yükleniyor...</span>
+        <span id="kullanici_bilgi" style="color: #475569; font-weight: bold; font-size: 16px;">Form Yükleniyor...</span>
     </div>
 
-    <div class="info-box">
-        <strong>Nasıl Cevaplanır?</strong> Aşağıdaki her maddede yer alan A ve B seçeneklerini dikkatlice okuyunuz. Size veya çocuğunuza en uygun olan <strong>yalnızca bir seçeneği</strong> tıklayarak yeşil hale getiriniz.
+    <div class="info-box" id="aciklama_kutusu">
+        <strong>Değerli Katılımcı,</strong><br>
+        Bu anket, okulumuzun yıllık rehberlik ve psikolojik danışma programını hazırlamak ve ihtiyaçları doğru tespit etmek amacıyla Millî Eğitim Bakanlığı standartlarında uygulanmaktadır. <br><br>
+        <strong>Nasıl Doldurulacak?</strong><br> 
+        Aşağıdaki her maddede iki seçenek (A ve B) bulunmaktadır. Lütfen her madde için size en uygun olan <strong>yalnızca BİR seçeneği</strong> işaretleyiniz. Verdiğiniz cevaplar kesinlikle gizli tutulacak ve sadece eğitim-öğretim kalitesini artırmak amacıyla istatistiksel raporlama için kullanılacaktır. Tüm soruları eksiksiz yanıtlamanız büyük önem taşımaktadır.
     </div>
 
-    <div class="progress-container">
-        <div id="ilerleme" class="progress-fill"></div>
+    <div class="progress-sticky">
+        <div class="progress-container"><div id="ilerleme" class="progress-fill"></div></div>
+        <div class="progress-text">Tamamlanma: <span id="yuzde_metin">%0</span> (<span id="cevaplanan_soru">0</span> / <span id="toplam_soru">0</span>)</div>
     </div>
 
     <div id="anket_maddeleri"></div>
 
-    <button id="kaydet_butonu" class="submit-btn" onclick="anketiKaydet()">Anketi Tamamla ve Veritabanına Gönder</button>
+    <button id="kaydet_butonu" class="submit-btn" onclick="anketiKaydet()">Anketi Kaydet ve Tamamla</button>
 </div>
 
 <script>
-// Giriş ekranından gelen güvenli parametreleri yakalıyoruz
+// URL'den Gelen Parametreleri Al
 const urlParams = new URLSearchParams(window.location.search);
 const ogrenciId = urlParams.get('ogrenci_id');
-const tip = urlParams.get('tip'); // 'Ogrenci' mi 'Veli' mi?
+let tip = urlParams.get('tip'); // 'Ogrenci' veya 'Veli'
 
-// MEB Orijinal Şablonundaki Örnek Hedef Maddeleri
-const maddelerVerisi = [
-    {
-        "kod": "M12",
-        "A": "Sorunları tanımlayıp çeşitli çözümler içinden en mantıklı olanı uygulamak.",
-        "B": "Sorunlar karşısında ne yapacağımı bilemeyip başkalarının çözmesini beklemek."
-    },
-    {
-        "kod": "M30",
-        "A": "Kendime uygun ders çalışma becerilerini geliştirmek (plan yapmak, not çıkartmak, çalışma ortamını düzenlemek vb.).",
-        "B": "Ders çalışırken dikkatimi dağıtacak şeylerle ilgilenip planlarımı sürekli ertelemek."
-    },
-    {
-        "kod": "M08",
-        "A": "Hayatımla ilgili konularda (kıyafet seçimi, arkadaş seçimi, okul seçimi) kendi başıma karar vermek.",
-        "B": "Benim adıma her zaman ailemin veya başkalarının karar vermesini beklemek."
-    }
-];
+// Eğer öğretmen direkt linkten girmişse ve ogrenci_id yoksa, tipi Öğretmen yap
+if (!ogrenciId && !tip) { tip = 'Ogretmen'; }
 
+// MEB ORİJİNAL MADDE HAVUZU (TÜM HEDEFLER EKSİKSİZ)
+const mebMaddeleri = {
+    "Ogrenci": [
+        {"kod": "M12", "soru": "Sorunları tanımlayıp çeşitli çözümler içinden en mantıklı olanı uygulamak konusunda..."},
+        {"kod": "M30", "soru": "Kendime uygun ders çalışma becerilerini geliştirmek (plan yapmak, not çıkartmak) konusunda..."},
+        {"kod": "M08", "soru": "Hayatımla ilgili konularda karar verme becerilerimi geliştirmek (kıyafet seçme, arkadaş seçme) konusunda..."},
+        {"kod": "M29", "soru": "Okula devam etme isteğimi artırmak konusunda..."},
+        {"kod": "M07", "soru": "Arkadaşlık kurma becerilerimi geliştirmek (insanlarla tanışmak, arkadaş edinmek) konusunda..."},
+        {"kod": "M36", "soru": "Üst öğrenime geçiş sınavları (Liselere giriş vb.) hakkında bilgilenmek konusunda..."},
+        {"kod": "M34", "soru": "Okuldaki kulüpler (spor, satranç, tiyatro vb.) ve yarışmalar gibi etkinlikler hakkında bilgilenmek konusunda..."},
+        {"kod": "M15", "soru": "İlişkilerimi bozmadan haklarımı savunmayı öğrenmek (Atılganlık) konusunda..."},
+        {"kod": "M48", "soru": "Zorlandığım konularda doğru kişilerden yardım isteme becerilerimi geliştirmek konusunda..."},
+        {"kod": "M04", "soru": "Başkaları hatırlatmadan sorumluluklarımı yerine getirmek (ödevleri tamamlama, eşyaları düzenleme) konusunda..."},
+        {"kod": "M42", "soru": "Duygularım (üzüntü, öfke, kaygı) ortaya çıktığında, bunları kontrol etmeyi öğrenmek konusunda..."},
+        {"kod": "M11", "soru": "Bilgisayar, cep telefonu veya televizyonu kullanırken uygun içerik seçmek ve süreyi ayarlamak konusunda..."},
+        {"kod": "M31", "soru": "Zamanımı planlamayı öğrenmek (ders çalışmak, arkadaşlarla buluşmak, oyun oynamak) konusunda..."},
+        {"kod": "M13", "soru": "Ergenlikteki değişikliklerle ilgili bilgilenmek (bedendeki değişimler, sivilceler vb.) konusunda..."},
+        {"kod": "M14", "soru": "Hak ve sorumluluklarımı öğrenmek konusunda..."},
+        {"kod": "M23", "soru": "Yeteneklerimi (neleri iyi yapabildiğimi) tanımak konusunda..."},
+        {"kod": "M32", "soru": "Mezun olduktan sonra gidebileceğim eğitim kurumlarını tanımak konusunda..."},
+        {"kod": "M47", "soru": "Yaşamdaki zorluklar karşısında duygusal açıdan dayanıklı olmak (Psikolojik Sağlamlık) konusunda..."},
+        {"kod": "M33", "soru": "Ders çalıştığım sırada dikkatimi dağıtan davranışlardan uzak durmayı öğrenmek konusunda..."},
+        {"kod": "M16", "soru": "Madde kullanımı, oyun ve sosyal medya gibi bağımlılık türleri ve korunma yöntemleri hakkında..."},
+        {"kod": "M03", "soru": "Duygu ve düşüncelerimi saygılı ve açık bir şekilde ifade etmek konusunda..."},
+        {"kod": "M39", "soru": "Kişisel özelliklerim ile belli meslekler arasında ilişkiler kurmak konusunda..."},
+        {"kod": "M19", "soru": "İnsanlarla anlaşmazlıklarımı, her iki tarafın da isteklerini karşılayacak şekilde çözmeyi öğrenmek konusunda..."},
+        {"kod": "M45", "soru": "Farklı özelliklere sahip bireylere saygı göstermeyi öğrenmek konusunda..."},
+        {"kod": "M46", "soru": "Aile içi iletişimimi geliştirmek konusunda..."},
+        {"kod": "M06", "soru": "Öfkemi kontrol etmek konusunda..."},
+        {"kod": "M09", "soru": "Bir şeyi yapmak istemediğimde “HAYIR” diyebilmek (Sınır Koyma) konusunda..."},
+        {"kod": "M27", "soru": "Okul ve sınıf kurallarını benimseme konusunda..."},
+        {"kod": "M10", "soru": "İletişim becerilerimi geliştirmek (karşımızdakinin beden ve yüz hareketlerinden duygularını anlama) konusunda..."},
+        {"kod": "M38", "soru": "Rehber öğretmenden/psikolojik danışmandan hangi konularda yardım alabileceğimi öğrenmek konusunda..."},
+        {"kod": "M01", "soru": "Kendime güvenmeyi öğrenmek konusunda..."},
+        {"kod": "M22", "soru": "İlgilerimi (kodlama, spor, resim ve müzik) keşfetmek konusunda..."},
+        {"kod": "M37", "soru": "Sınav kaygısı ile başa çıkmayı öğrenmek konusunda..."},
+        {"kod": "M41", "soru": "Bedenimi korumayı öğrenmek (Başkalarının bedenime dokunmasına izin vermemek) konusunda..."},
+        {"kod": "M18", "soru": "Riskli davranışlardan kaçınmayı öğrenmek (tehlikeli gruplara katılmamak vb.) konusunda..."},
+        {"kod": "M44", "soru": "Sağlıklı yaşam becerilerini kazanmak (spor yapmak, sağlıklı beslenmek) konusunda..."},
+        {"kod": "M05", "soru": "Zorbalığa uğradığımda ne yapmam gerektiğini öğrenmek (alay etme, vurma vb.) konusunda..."},
+        {"kod": "M02", "soru": "Duygularımı (mutluluk, öfke, kaygı, üzüntü, korku) tanımak konusunda..."}
+    ],
+    "Veli": [
+        {"kod": "M12", "soru": "Çocuğumun sorunları tanımlayıp çeşitli çözümler içinden mantıklı olanı uygulaması konusunda..."},
+        {"kod": "M30", "soru": "Çocuğumun ders çalışma becerilerini (düzenli çalışma, telefondan uzak durma) geliştirmesi konusunda..."},
+        {"kod": "M08", "soru": "Çocuğumun kendisiyle ilgili konularda karar verme becerilerini geliştirmesi konusunda..."},
+        {"kod": "M29", "soru": "Çocuğumun okula devam etme isteğini arttırma konusunda..."},
+        {"kod": "M07", "soru": "Çocuğumun arkadaşlık kurma becerilerini geliştirmesi konusunda..."},
+        {"kod": "M36", "soru": "Çocuğumun liselere giriş ve üst öğrenim sınavları hakkında bilgilenmesi konusunda..."},
+        {"kod": "M34", "soru": "Çocuğumun okuldaki kulüpler ve sosyokültürel etkinlikler hakkında bilgilenmesi konusunda..."},
+        {"kod": "M15", "soru": "Çocuğumun haklarını savunmasını öğrenmesi (Atılganlık) konusunda..."},
+        {"kod": "M48", "soru": "Çocuğumun zorlandığı konularda doğru kişilerden yardım isteme becerilerini geliştirmesi konusunda..."},
+        {"kod": "M04", "soru": "Çocuğumun sorumluluklarının bilincinde olması (ödev tamamlama, eşya düzenleme) konusunda..."},
+        {"kod": "M42", "soru": "Çocuğumun duygularını kontrol etmeyi öğrenmesi (Duygu Düzenleme) konusunda..."},
+        {"kod": "M11", "soru": "Çocuğumun bilgisayar, telefon veya televizyonu kullanırken süre ve içerik seçimi konusunda..."},
+        {"kod": "M31", "soru": "Çocuğumun zamanını planlamayı öğrenmesi (ders, oyun, arkadaş) konusunda..."},
+        {"kod": "M13", "soru": "Çocuğumun ergenlikteki değişikliklerle ilgili bilgilenmesi konusunda..."},
+        {"kod": "M14", "soru": "Çocuğumun hak ve sorumluluklarını bilmesi konusunda..."},
+        {"kod": "M23", "soru": "Çocuğumun yeteneklerini (neleri iyi yapabildiğini) tanıması konusunda..."},
+        {"kod": "M32", "soru": "Çocuğumun mezuniyet sonrası gidebileceği eğitim kurumlarını tanıması konusunda..."},
+        {"kod": "M47", "soru": "Çocuğumun yaşamdaki zorluklar karşısında duygusal açıdan dayanıklı olması konusunda..."},
+        {"kod": "M33", "soru": "Çocuğumun ders çalıştığı sırada dikkatini dağıtan davranışlardan uzak durması konusunda..."},
+        {"kod": "M16", "soru": "Çocuğumun bağımlılık türleri (madde, ekran) ve korunma yöntemleri hakkında bilgilenmesi konusunda..."},
+        {"kod": "M03", "soru": "Çocuğumun duygu ve düşüncelerini saygılı ve açık bir şekilde ifade etmesi konusunda..."},
+        {"kod": "M39", "soru": "Çocuğumun mesleki benlik algısını geliştirmesi konusunda..."},
+        {"kod": "M19", "soru": "Çocuğumun insanlarla anlaşmazlıklarını çatışma çözme becerileri ile aşması konusunda..."},
+        {"kod": "M45", "soru": "Çocuğumun farklı özelliklere sahip bireylere saygı göstermesi konusunda..."},
+        {"kod": "M46", "soru": "Çocuğumun aile üyeleriyle iletişimini güçlendirmesi konusunda..."},
+        {"kod": "M06", "soru": "Çocuğumun öfkesini kontrol etmesi konusunda..."},
+        {"kod": "M09", "soru": "Çocuğumun riskli durumlarda “HAYIR” deme becerisini geliştirmesi konusunda..."},
+        {"kod": "M27", "soru": "Çocuğumun okul ve sınıf kurallarını benimsemesi konusunda..."},
+        {"kod": "M10", "soru": "Çocuğumun iletişim becerilerini geliştirmesi (göz teması, söz kesmeme) konusunda..."},
+        {"kod": "M38", "soru": "Çocuğumun rehberlik servisinden hangi konularda yardım alabileceğini bilmesi konusunda..."},
+        {"kod": "M01", "soru": "Çocuğumun kendine güvenmeyi öğrenmesi konusunda..."},
+        {"kod": "M22", "soru": "Çocuğumun ilgilerini (kodlama, spor, müzik) keşfetmesi konusunda..."},
+        {"kod": "M37", "soru": "Çocuğumun sınav kaygısı ile başa çıkmayı öğrenmesi konusunda..."},
+        {"kod": "M41", "soru": "Çocuğumun istismardan korunmayı öğrenmesi konusunda..."},
+        {"kod": "M18", "soru": "Çocuğumun riskli davranışlardan ve tehlikeli ortamlardan kaçınmayı öğrenmesi konusunda..."},
+        {"kod": "M44", "soru": "Çocuğumun sağlıklı yaşam becerilerini edinmesi konusunda..."},
+        {"kod": "M05", "soru": "Çocuğumun zorbalığa uğradığında ne yapması gerektiğini bilmesi konusunda..."},
+        {"kod": "M02", "soru": "Çocuğumun duygularını tanıması (Duygu Farkındalığı) konusunda..."}
+    ],
+    "Ogretmen": [
+        {"kod": "M12", "soru": "Öğrencilerin problem çözme becerilerini güçlendirmesi konusunda..."},
+        {"kod": "M30", "soru": "Öğrencilerin ders çalışma becerilerini (plan yapmak, not çıkartmak) geliştirmesi konusunda..."},
+        {"kod": "M08", "soru": "Öğrencilerin karar alma becerilerini güçlendirmesi konusunda..."},
+        {"kod": "M29", "soru": "Öğrencilerin okula devam motivasyonlarını artırması konusunda..."},
+        {"kod": "M07", "soru": "Öğrencilerin arkadaşlık kurma becerilerini geliştirmesi konusunda..."},
+        {"kod": "M36", "soru": "Öğrencilerin liselere giriş ve üst öğrenim sınavları hakkında bilgilenmesi konusunda..."},
+        {"kod": "M34", "soru": "Öğrencilerin okuldaki kulüpler ve etkinlikler hakkında bilgilenmesi konusunda..."},
+        {"kod": "M15", "soru": "Öğrencilerin ilişkilerini bozmadan haklarını savunmayı öğrenmesi konusunda..."},
+        {"kod": "M48", "soru": "Öğrencilerin yardım arama becerilerini geliştirmesi konusunda..."},
+        {"kod": "M04", "soru": "Öğrencilerin sorumluluklarının bilincinde olması (ödev tamamlama vb.) konusunda..."},
+        {"kod": "M42", "soru": "Öğrencilerin duygu düzenleme becerilerini kazanması konusunda..."},
+        {"kod": "M11", "soru": "Öğrencilerin teknoloji bağımlılığına karşı bilinçli teknoloji kullanımı kazanması konusunda..."},
+        {"kod": "M31", "soru": "Öğrencilerin zaman yönetimi becerilerini güçlendirmesi konusunda..."},
+        {"kod": "M13", "soru": "Öğrencilerin ergenlikteki değişikliklere uyum sağlaması konusunda..."},
+        {"kod": "M14", "soru": "Öğrencilerin hak ve sorumluluklarını bilmesi konusunda..."},
+        {"kod": "M23", "soru": "Öğrencilerin yeteneklerini (neleri iyi yapabildiklerini) tanıması konusunda..."},
+        {"kod": "M32", "soru": "Öğrencilerin üst öğrenim kurumları hakkında bilgi edinmesi konusunda..."},
+        {"kod": "M47", "soru": "Öğrencilerin yaşamdaki zorluklar karşısında psikolojik sağlamlık kazanması konusunda..."},
+        {"kod": "M33", "soru": "Öğrencilerin dikkat geliştirme becerilerini iyileştirmesi konusunda..."},
+        {"kod": "M16", "soru": "Öğrencilerin bağımlılıkla mücadele ve korunma yöntemleri hakkında bilgilenmesi konusunda..."},
+        {"kod": "M03", "soru": "Öğrencilerin duygu ve düşüncelerini açık bir şekilde ifade etmesi konusunda..."},
+        {"kod": "M39", "soru": "Öğrencilerin mesleki benlik algısını oluşturması konusunda..."},
+        {"kod": "M19", "soru": "Öğrencilerin kişilerarası çatışma çözme becerilerini geliştirmesi konusunda..."},
+        {"kod": "M45", "soru": "Öğrencilerin bireysel farklılıklara saygı göstermeyi öğrenmesi konusunda..."},
+        {"kod": "M46", "soru": "Öğrencilerin aile içi iletişim becerileri konusunda..."},
+        {"kod": "M06", "soru": "Öğrencilerin öfkelerini kontrol etme becerileri konusunda..."},
+        {"kod": "M09", "soru": "Öğrencilerin ilişkilerinde kişisel sınırlarını koruması (Sınır Koyma) konusunda..."},
+        {"kod": "M27", "soru": "Öğrencilerin okul ve sınıf kurallarını benimsemesi konusunda..."},
+        {"kod": "M10", "soru": "Öğrencilerin iletişim becerilerini iyileştirmesi konusunda..."},
+        {"kod": "M38", "soru": "Öğrencilerin rehberlik servisinden hangi konularda yardım alabileceklerini öğrenmesi konusunda..."},
+        {"kod": "M01", "soru": "Öğrencilerin kendine güvenmeyi (Özgüven) öğrenmesi konusunda..."},
+        {"kod": "M22", "soru": "Öğrencilerin ilgilerini (kodlama, spor, müzik) keşfetmesi konusunda..."},
+        {"kod": "M37", "soru": "Öğrencilerin sınav kaygısı ile başa çıkma becerileri kazanması konusunda..."},
+        {"kod": "M41", "soru": "Öğrencilerin istismardan korunmayı öğrenmesi konusunda..."},
+        {"kod": "M18", "soru": "Öğrencilerin riskli davranışlardan ve ortamlardan kaçınmayı öğrenmesi konusunda..."},
+        {"kod": "M44", "soru": "Öğrencilerin sağlıklı yaşam becerilerini edinmesi konusunda..."},
+        {"kod": "M05", "soru": "Öğrencilerin akran zorbalığına uğradığında ne yapmaları gerektiğini bilmesi konusunda..."},
+        {"kod": "M02", "soru": "Öğrencilerin duygularını tanıması (Duygu Farkındalığı) konusunda..."}
+    ]
+};
+
+let aktifMaddeler = [];
 let secilenYanitlar = {};
 
-// Form yapısını ekrana inşa eden fonksiyon
 function anketArayuzunuKur() {
-    if(!ogrenciId || !tip) {
-        alert("Geçersiz giriş işlemi! Lütfen önce kimlik doğrulama ekranından giriş yapın.");
-        window.location.href = '/giris';
-        return;
+    if(!tip || (tip !== 'Ogretmen' && !ogrenciId)) { 
+        alert("Geçersiz giriş!"); window.location.href = '/'; return; 
     }
 
-    document.getElementById('kullanici_bilgi').innerText = `${tip === 'Veli' ? 'VELİ ANKET FORMU' : 'ÖĞRENCİ ANKET FORMU'} (Kayıt ID: ${ogrenciId})`;
-    const mainContainer = document.getElementById('anket_maddeleri');
+    // Başlık ve Açıklamaları Tipe Göre Ayarla
+    let formBaslik = "ÖĞRENCİ FORMU";
+    let aSikkiMetni = "Desteğe/Rehberliğe ihtiyacım var.";
+    let bSikkiMetni = "Bu konuda yeterliyim.";
     
-    maddelerVerisi.forEach((madde, index) => {
+    if (tip === 'Veli') {
+        formBaslik = "VELİ FORMU";
+        aSikkiMetni = "Çocuğumun desteğe/rehberliğe ihtiyacı var.";
+        bSikkiMetni = "Çocuğum bu konuda yeterli.";
+    } else if (tip === 'Ogretmen') {
+        formBaslik = "ÖĞRETMEN FORMU";
+        aSikkiMetni = "Öğrencilerin bu konuda rehberliğe/desteğe ihtiyacı var.";
+        bSikkiMetni = "Öğrenciler bu konuda yeterli.";
+    }
+
+    document.getElementById('kullanici_bilgi').innerText = `RİBA ${formBaslik} (MEB Standart)`;
+    aktifMaddeler = mebMaddeleri[tip];
+    document.getElementById('toplam_soru').innerText = aktifMaddeler.length;
+    
+    const mainContainer = document.getElementById('anket_maddeleri');
+    aktifMaddeler.forEach((madde, index) => {
         const kart = document.createElement('div');
         kart.className = 'madde-kart';
         kart.innerHTML = `
-            <div class="madde-no">Soru Maddesi ${index + 1}</div>
-            <button class="secenek-btn" id="${madde.kod}_A" onclick="secimGuncelle('${madde.kod}', 'A')"><strong>A)</strong> ${madde.A}</button>
-            <button class="secenek-btn" id="${madde.kod}_B" onclick="secimGuncelle('${madde.kod}', 'B')"><strong>B)</strong> ${madde.B}</button>
+            <div class="madde-no">${index + 1}. Madde</div>
+            <div style="font-size:16px; color:#1e293b; margin-bottom:15px; font-weight:500;">${madde.soru}</div>
+            <button class="secenek-btn" id="${madde.kod}_A" onclick="secimGuncelle('${madde.kod}', 'A')"><strong>A)</strong> ${aSikkiMetni}</button>
+            <button class="secenek-btn" id="${madde.kod}_B" onclick="secimGuncelle('${madde.kod}', 'B')"><strong>B)</strong> ${bSikkiMetni}</button>
         `;
         mainContainer.appendChild(kart);
     });
 }
 
 function secimGuncelle(maddeKod, tercih) {
-    // Seçim yapılan maddedeki eski işaretleri temizle
     document.getElementById(`${maddeKod}_A`).classList.remove('active');
     document.getElementById(`${maddeKod}_B`).classList.remove('active');
-    
-    // Tıklanan yeni seçeneği yeşile boya
     document.getElementById(`${maddeKod}_${tercih}`).classList.add('active');
     
-    // MEB Formül Altyapısı: İşaretlenen şık 1 puan, diğeri 0 puan olarak paketleniyor
-    secilenYanitlar[maddeKod] = {
-        "A": tercih === 'A' ? 1 : 0,
-        "B": tercih === 'B' ? 1 : 0
-    };
+    // MEB Formülü[cite: 3, 4, 5]: İhtiyaç belirtilen şıkka (A) 1 puan verilir, (B) şıkkı 0 kabul edilir.
+    secilenYanitlar[maddeKod] = { "A": tercih === 'A' ? 1 : 0, "B": tercih === 'B' ? 1 : 0 };
     
-    ilerlemeCubuguGuncelle();
-}
-
-function iIerlemeCubuguGuncelle() {
-    const toplamSoru = maddelerVerisi.length;
-    const cevaplananSoru = Object.keys(secilenYanitlar).length;
-    const yuzdelik = (cevaplananSoru / toplamSoru) * 100;
+    // İlerleme Çubuğunu Güncelle
+    const cevaplanan = Object.keys(secilenYanitlar).length;
+    const yuzdelik = Math.round((cevaplanan / aktifMaddeler.length) * 100);
     
     document.getElementById('ilerleme').style.width = yuzdelik + '%';
+    document.getElementById('yuzde_metin').innerText = '%' + yuzdelik;
+    document.getElementById('cevaplanan_soru').innerText = cevaplanan;
     
-    // Tüm sorular eksiksiz doldurulduğunda büyük gönderme butonu görünür hale gelir
-    if (cevaplananSoru === toplamSoru) {
-        document.getElementById('kaydet_butonu').style.display = 'block';
+    if(yuzdelik === 100) {
+        document.getElementById('ilerleme').style.background = '#3b82f6';
+        document.getElementById('kaydet_butonu').style.animation = 'pulse 1s infinite';
     }
 }
 
 function anketiKaydet() {
-    const veriPaketi = {
-        ogrenci_id: ogrenciId,
-        dolduran_tipi: tip,
-        cevaplar: secilenYanitlar
-    };
+    const toplamSoru = aktifMaddeler.length;
+    const cevaplanan = Object.keys(secilenYanitlar).length;
 
-    // Veriler app.py üzerindeki /anket-kaydet API'sine güvenli hatla gönderiliyor
-    fetch('/anket-kaydet', {
+    // EKSİK KONTROLÜ
+    if (cevaplanan < toplamSoru) {
+        alert(`DİKKAT: Anket henüz tamamlanmadı!\nLütfen işaretlemediğiniz ${toplamSoru - cevaplanan} soruyu kontrol ediniz.`);
+        return;
+    }
+
+    document.getElementById('kaydet_butonu').innerText = "Veriler İşleniyor, Lütfen Bekleyin...";
+    document.getElementById('kaydet_butonu').style.opacity = '0.8';
+    
+    fetch('/api/anket-kaydet', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(veriPaketi)
+        body: JSON.stringify({ ogrenci_id: ogrenciId, dolduran_tipi: tip, cevaplar: secilenYanitlar })
     })
     .then(res => res.json())
     .then(data => {
         if (data.durum === 'basarili') {
-            alert('Anket yanıtlarınız sisteme kalıcı ve güvenli olarak kaydedilmiştir. Katılımınız için teşekkür ederiz!');
-            window.location.href = '/'; // Ana sayfaya emniyetli dönüş
+            alert('Anketiniz başarıyla MEB standartlarında kaydedilmiştir. Katkılarınız için teşekkür ederiz!');
+            
+            // Kayıttan sonra öğretmeni öğretmen paneline, veli/öğrenciyi ana sayfaya yönlendir
+            if (tip === 'Ogretmen') { window.location.href = '/panel/ogretmen'; }
+            else { window.location.href = '/'; }
+            
         } else {
-            alert('Kayıt Başarısız: ' + data.mesaj);
+            alert('Sistemsel Hata: ' + data.mesaj);
+            document.getElementById('kaydet_butonu').innerText = "Anketi Kaydet ve Tamamla";
+            document.getElementById('kaydet_butonu').style.opacity = '1';
         }
-    })
-    .catch(err => {
-        console.error("Kayıt hatası:", err);
-        alert("Bağlantı hatası oluştu. Lütfen internetinizi kontrol edip tekrar deneyin.");
     });
 }
 
-// Formu tetikle
+// Sistemi Başlat
 anketArayuzunuKur();
 </script>
+
+<style>
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+</style>
 </body>
 </html>
