@@ -1,92 +1,105 @@
-import os
 from supabase import create_client, Client
 
-# DİKKAT: Supabase bilgilerini doğrudan buraya da yazabilirsiniz 
-# ya da bilgisayarınızın çevre değişkenlerinden okutabilirsiniz.
-# Testi kolaylaştırmak için aşağıdaki iki tırnağın içine kendi şifrelerinizi yapıştırabilirsiniz:
-SUPABASE_URL = "https://pmlgahbdpzlhzlbvfpxf.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBtbGdhaGJkcHpsaHpsYnZmcHhmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMjI4MzQsImV4cCI6MjA5NDc5ODgzNH0.6-OdE2chR29IJHKV1lCHYDkxE5HkkMtvMmXEkFYnbH0"
+# =====================================================================
+# SUPABASE BAĞLANTI AYARLARI
+# =====================================================================
+# Lütfen aşağıdaki tırnakların içine 5. Adımda aldığınız kendi bilgilerinizi yazın:
+SUPABASE_URL = "https://your-project-url.supabase.co"
+SUPABASE_KEY = "your-anon-key"
 
-if SUPABASE_URL.startswith("5._ADIMDA") or SUPABASE_KEY.startswith("5._ADIMDA"):
-    print("LÜTFEN ÖNCE SUPABASE URL VE KEY BİLGİLERİNİZİ KODA YAZINIZ!")
+if SUPABASE_URL.startswith("https://your-") or SUPABASE_KEY == "your-anon-key":
+    print("HATA: Lütfen önce SUPABASE_URL ve SUPABASE_KEY bilgilerinizi giriniz!")
     exit()
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def donem_olustur_ve_aktif_et(donem_adi):
-    """Sistemde aktif bir eğitim yılı dönemi açar."""
-    print(f"'{donem_adi}' kontrol ediliyor...")
-    mevcut = supabase.table("donemler").select("id").eq("donem_adi", donem_adi).execute()
-    
-    if len(mevcut.data) == 0:
-        # Önceki tüm dönemleri pasif yap
-        supabase.table("donemler").update({"aktif_mi": False}).eq("aktif_mi", True).execute()
-        # Yeni dönemi aktif olarak ekle
-        yeni = supabase.table("donemler").insert({"donem_adi": donem_adi, "aktif_mi": True}).execute()
-        print(f"Yeni aktif dönem başarıyla açıldı: {donem_adi}")
-        return yeni.data[0]['id']
-    else:
-        print(f"'{donem_adi}' zaten mevcut.")
-        return mevcut.data[0]['id']
+# =====================================================================
+# SEÇENEK 1: TÜM VERİTABANINI TEMİZLEME (ÖĞRENCİ SİLME) FONKSİYONU
+# =====================================================================
+def veritabanini_sifirla():
+    """Veritabanındaki tüm öğrencileri, sınıfları ve cevapları kalıcı olarak siler."""
+    print("\n⚠️ VERİTABANI SİLME İŞLEMİ BAŞLADI...")
+    try:
+        # 1. Önce anket cevaplarını silelim (Bağlantılı tablo olduğu için)
+        supabase.table("riba_cevaplari").delete().neq("id", 0).execute()
+        print("-> Tüm anket cevapları silindi.")
 
-def sinif_ve_ogrencileri_yukle(sinif_adi, ogrenci_listesi):
-    """
-    Belirtilen sınıfa ait öğrencileri toplu halde yükler.
-    ogrenci_listesi: [{"okul_no": 120, "ad_soyad": "Ahmet Yılmaz"}, ...] formatında olmalıdır.
-    """
-    # 1. Sınıf veritabanında var mı kontrol et, yoksa oluştur
-    sinif_kontrol = supabase.table("siniflar").select("id").eq("sinif_adi", sinif_adi).execute()
-    
-    if len(sinif_kontrol.data) == 0:
-        yeni_sinif = supabase.table("siniflar").insert({"sinif_adi": sinif_adi}).execute()
-        sinif_id = yeni_sinif.data[0]['id']
-        print(f"'{sinif_adi}' sınıfı sisteme yeni eklendi.")
-    else:
-        sinif_id = sinif_kontrol.data[0]['id']
-        print(f"'{sinif_adi}' sınıfı zaten mevcut, ID'si alındı.")
+        # 2. Öğrencileri silelim
+        supabase.table("ogrenciler").delete().neq("id", 0).execute()
+        print("-> Tüm öğrenciler veritabanından silindi.")
 
-    # 2. Öğrencileri toplu olarak veritabanına ekle
-    eklenen_sayisi = 0
-    for ogrenci in ogrenci_listesi:
-        try:
-            # Öğrenciyi eklemeyi dene
-            supabase.table("ogrenciler").insert({
-                "okul_no": ogrenci["okul_no"],
-                "ad_soyad": ogrenci["ad_soyad"],
-                "sinif_id": sinif_id
-            }).execute()
-            eklenen_sayisi += 1
-        except Exception as e:
-            # Eğer numara zaten varsa hata verecektir, atla
-            print(f"Hata: {ogrenci['okul_no']} numaralı öğrenci zaten kayıtlı olabilir.")
+        # 3. Sınıfları silelim
+        supabase.table("siniflar").delete().neq("id", 0).execute()
+        print("-> Tüm sınıflar silindi.")
+        
+        print("✅ VERİTABANI TAMAMEN TEMİZLENDİ! SİSTEM SIFIR DURUMDA.\n")
+    except Exception as e:
+        print(f"Silme işlemi sırasında hata oluştu: {str(e)}")
 
-    print(f"--> {sinif_adi} sınıfına {eklenen_sayisi} yeni öğrenci başarıyla yüklendi!\n")
+# =====================================================================
+# SEÇENEK 2: EXCEL / LİSTE MANTIĞIYLA TOPLU ÖĞRENCİ YÜKLEME FONKSİYONU
+# =====================================================================
+def donem_ve_sinif_kur(donem_adi, sinif_adi, ogrenci_listesi):
+    """Belirtilen dönemi, sınıfı açar ve öğrencileri toplu yükler."""
+    try:
+        # Dönem Kontrolü
+        donem_kontrol = supabase.table("donemler").select("id").eq("donem_adi", donem_adi).execute()
+        if len(donem_kontrol.data) == 0:
+            supabase.table("donemler").update({"aktif_mi": False}).eq("aktif_mi", True).execute()
+            yeni_donem = supabase.table("donemler").insert({"donem_adi": donem_adi, "aktif_mi": True}).execute()
+            donem_id = yeni_donem.data[0]['id']
+        else:
+            donem_id = donem_kontrol.data[0]['id']
 
-# ==========================================
-# ÇALIŞTIRMA VE TEST ALANI
-# ==========================================
+        # Sınıf Kontrolü
+        sinif_kontrol = supabase.table("siniflar").select("id").eq("sinif_adi", sinif_adi).execute()
+        if len(sinif_kontrol.data) == 0:
+            yeni_sinif = supabase.table("siniflar").insert({"sinif_adi": sinif_adi}).execute()
+            sinif_id = yeni_sinif.data[0]['id']
+        else:
+            sinif_id = sinif_kontrol.data[0]['id']
+
+        # Öğrencileri Toplu Ekleme
+        eklenen = 0
+        for ogrenci in ogrenci_listesi:
+            try:
+                supabase.table("ogrenciler").insert({
+                    "okul_no": ogrenci["okul_no"],
+                    "ad_soyad": ogrenci["ad_soyad"],
+                    "sinif_id": sinif_id
+                }).execute()
+                eklenen += 1
+            except:
+                pass # Aynı numara varsa hata vermemesi için atla
+                
+        print(f"✅ {sinif_adi} sınıfı için {eklenen} öğrenci başarıyla yüklendi.")
+    except Exception as e:
+        print(f"Yükleme hatası: {str(e)}")
+
+# =====================================================================
+# KONTROL PANELİ (NE YAPMAK İSTİYORSANIZ AŞAĞIDAN AYARLAYIN)
+# =====================================================================
 if __name__ == "__main__":
-    # 1. Önce aktif eğitim yılını tanımlıyoruz (Bu her sene 1 kez yapılır)
-    # Bu sayede her senenin raporu birbirine karışmadan kalıcı saklanacak
-    aktif_donem_id = donem_olustur_ve_aktif_et("2025-2026 Eğitim Öğretim Yılı")
-
-    # 2. ÖRNEK DENEME LİSTELERİ
-    # Normalde e-okuldan aldığınız excel verisini buraya döngüyle bağlayacağız.
-    # Sistemin çalıştığını görmek için aşağıdaki deneme verilerini yükleyelim:
     
-    ornek_6A_listesi = [
+    # ❌ EĞER TÜM ÖĞRENCİLERİ VE ESKİ VERİLERİ SİLMEK İSTİYORSANIZ:
+    # Aşağıdaki satırın başındaki '#' işaretini kaldırın ve dosyayı çalıştırın:
+    # veritabanini_sifirla()
+
+
+    # 📝 EĞER SİSTEME YENİ ÖRNEK ÖĞRENCİLER YÜKLEMEK İSTİYORSANIZ:
+    # (Silme işlemi kapalıyken burası çalışır)
+    
+    ornek_6A = [
         {"okul_no": 101, "ad_soyad": "Ali Yılmaz"},
         {"okul_no": 102, "ad_soyad": "Fatma Demir"},
         {"okul_no": 103, "ad_soyad": "Sıraç Aksan"}
     ]
     
-    ornek_6B_listesi = [
+    ornek_6B = [
         {"okul_no": 201, "ad_soyad": "Zeynep Kaya"},
         {"okul_no": 202, "ad_soyad": "Mehmet Çelik"}
     ]
 
-    # Fonksiyonları çağırıp veritabanına yükleme yapıyoruz
-    sinif_ve_ogrencileri_yukle("6/A", ornek_6A_listesi)
-    sinif_ve_ogrencileri_yukle("6/B", ornek_6B_listesi)
-    
-    print("Tüm yükleme işlemi tamamlandı!")
+    print("--- Veri Yükleme İşlemi Başlatılıyor ---")
+    donem_ve_sinif_kur("2025-2026 Eğitim Öğretim Yılı", "6/A", ornek_6A)
+    donem_ve_sinif_kur("2025-2026 Eğitim Öğretim Yılı", "6/B", ornek_6B)
