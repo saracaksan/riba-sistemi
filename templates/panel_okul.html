@@ -2,170 +2,202 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Okul İdaresi - RİBA Paneli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okul İdaresi - RİBA Yönetim ve Analiz Otomasyonu</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; margin: 0; color: #1e293b; }
-        .header { background: #1e3a8a; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
-        .header h1 { margin: 0; font-size: 22px; }
-        .container { padding: 20px 30px; }
-        
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; }
-        .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; color: #475569; font-weight: bold; border-radius: 6px; cursor: pointer; transition: 0.2s;}
-        .tab-btn:hover { background: #cbd5e1; }
-        .tab-btn.active { background: #1e3a8a; color: white; }
-        .tab-content { display: none; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; margin: 0; color: #1e293b; }
+        .header { background: #1e3a8a; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 55px; background: white; padding: 3px; border-radius: 6px; }
+        .header h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
+        .header small { color: #93c5fd; font-weight: 500; }
+        .container { padding: 25px 30px; min-height: calc(100vh - 140px); }
+        .tabs { display: flex; gap: 8px; margin-bottom: 25px; border-bottom: 2px solid #cbd5e1; padding-bottom: 8px; }
+        .tab-btn { padding: 12px 20px; border: none; background: #e2e8f0; color: #475569; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .tab-btn:hover { background: #cbd5e1; color: #1e293b; }
+        .tab-btn.active { background: #1e3a8a; color: white; box-shadow: 0 4px 6px rgba(30, 58, 138, 0.2); }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
-
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 13px; color: #475569;}
-        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 5px; outline:none; }
-        
-        .btn { padding: 10px; border: none; border-radius: 5px; color: white; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 5px; transition: 0.2s;}
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); margin-bottom: 25px; border: 1px solid #e2e8f0; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .form-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 13px; color: #475569; }
+        input, select { width: 100%; padding: 11px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; font-size: 14px; transition: 0.2s; }
+        .btn { padding: 11px 20px; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; transition: 0.2s; text-decoration: none; }
         .btn:active { transform: scale(0.98); }
-        .btn-blue { background: #3b82f6; } .btn-green { background: #10b981; } .btn-orange { background: #f59e0b; } .btn-dark { background: #334155; } .btn-red { background: #ef4444; }
-        .btn-sm { width: auto; padding: 5px 10px; font-size: 12px; display: inline-block; margin: 0 2px;}
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #eff6ff; color: #1e3a8a; position: sticky; top: 0;}
-
-        /* Özel Düzenleme Modal Penceresi */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; }
-        .modal-content { background: white; width: 450px; margin: 80px auto; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-        
-        .toolbar { background: #f1f5f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: flex-end;}
+        .btn-blue { background: #3b82f6; } .btn-green { background: #10b981; } .btn-orange { background: #f59e0b; } .btn-red { background: #ef4444; } .btn-dark { background: #334155; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; color: #1e3a8a; font-weight: 700; border-bottom: 2px solid #cbd5e1; }
+        tr:hover { background: #f8fafc; }
+        .toolbar { background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+        .modal-content { background: white; width: 460px; margin: 80px auto; padding: 30px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .footer { background: #e2e8f0; color: #475569; text-align: center; padding: 15px; font-size: 13px; font-weight: 600; border-top: 1px solid #cbd5e1; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @media print {
+            body * { visibility: hidden; }
+            #yazdirilacak_alan, #yazdirilacak_alan * { visibility: visible; }
+            #yazdirilacak_alan { position: absolute; left: 0; top: 0; width: 100%; }
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div>
-        <h1>🏫 Okul İdaresi ve Rehberlik Servisi</h1>
-        <small>Öğrenci Yönetimi, Sınıf Atamaları ve Raporlama Paneli</small>
+<div class="header no-print">
+    <div class="header-left">
+        <img src="/static/logo.png" alt="MEB Logo" class="logo-img" onerror="this.src='https://upload.wikimedia.org/wikipedia/tr/b/b8/T.C._Mill%C3%AE_E%C4%9Fitim_Bakanl%C4%B1%C4%9F%C4%B1_Logo.svg'">
+        <div>
+            <h1>Okul İdaresi ve Rehberlik Servisi</h1>
+            <small>RİBA Karşılaştırmalı Otomasyon Merkezi</small>
+        </div>
     </div>
-    <a href="/" style="color:white; text-decoration:none; font-weight:bold; background:#1e40af; padding:8px 15px; border-radius:5px;">🚪 Çıkış Yap</a>
+    <a href="/" class="btn btn-red btn-sm">🚪 Güvenli Çıkış</a>
 </div>
 
 <div class="container">
-    <div class="tabs">
-        <button class="tab-btn active" onclick="sekmeAc('tab_ogrenci')">1. Şablondan Veri Yükle</button>
-        <button class="tab-btn" onclick="sekmeAc('tab_liste'); ogrenciListesiniGetir();">2. Öğrenci & Sınıf Düzenleme</button>
-        <button class="tab-btn" onclick="sekmeAc('tab_personel'); ogrGetir();">3. Öğretmen & Şube Yönetimi</button>
-        <button class="tab-btn" onclick="sekmeAc('tab_rapor'); okulEksikGetir();">4. Sonuç & Katılım Radarı</button>
+    <div class="tabs no-print">
+        <button class="tab-btn active" onclick="sekmeAc('tab_yukle')">1. Şablondan Öğrenci Yükle</button>
+        <button class="tab-btn" onclick="sekmeAc('tab_liste'); ogrenciListesiniGetir();">2. Öğrenci Listesi & Düzenleme</button>
+        <button class="tab-btn" onclick="sekmeAc('tab_personel'); ogretmenListesiGetir();">3. Öğretmen & Şube Atama</button>
+        <button class="tab-btn" onclick="sekmeAc('tab_takip'); katDurumuGetir();">4. Katılım ve Eksik Takibi</button>
+        <button class="tab-btn" onclick="sekmeAc('tab_rapor'); raporSecenekleriniYukle();">5. MEB Sonuç Raporları</button>
     </div>
 
-    <div id="tab_ogrenci" class="tab-content active">
+    <div id="tab_yukle" class="tab-content active no-print">
         <div class="grid-2">
             <div class="card" style="border-top: 4px solid #3b82f6;">
-                <h3 style="margin-top:0;">📥 Şablondan Tüm Okulu Yükle</h3>
-                <p style="font-size:12px; color:#64748b; margin-bottom:15px;">Listeyi hazırlamak için önce şablonu indirin, verilerinizi kopyalayıp Excel'e yapıştırın ve ardından sisteme yükleyin.</p>
-                <button class="btn btn-dark" style="width:auto; padding:10px 15px; margin-bottom:20px;" onclick="window.location.href='/api/okul/sablon-indir'">📝 Excel Yükleme Şablonunu İndir</button>
-                
+                <h3 style="margin-top:0; color:#1e3a8a;">📥 Şablondan Toplu Öğrenci Yükleme</h3>
+                <p style="font-size:12.5px; color:#64748b; margin-bottom:15px;">Listelerinizi hazırlamak için aşağıdaki butondan örnek Excel kopyasını indirebilir, şube sütununu doldurarak tek seferde sisteme aktarabilirsiniz.</p>
+                <button class="btn btn-dark" style="margin-bottom:20px;" onclick="window.location.href='/api/okul/sablon-indir'">📝 Excel Yükleme Şablonunu İndir</button>
                 <div class="form-group">
-                    <label>Doldurulmuş Dosyayı Seçin (.csv, .xlsx):</label>
-                    <input type="file" id="eo_dosya" accept=".csv, .xls, .xlsx">
+                    <label>Doldurulmuş Dosyayı Seçin (.xlsx, .xls, .csv):</label>
+                    <input type="file" id="dosya_secici" accept=".csv, .xls, .xlsx">
                 </div>
-                <button class="btn btn-blue" onclick="topluYukle()">Dosyayı İşle ve Sisteme Aktar</button>
+                <button class="btn btn-blue" style="width:100%;" onclick="topluOgrenciYukle()">Dosyayı İşle ve Öğrencileri Dağıt</button>
             </div>
             
             <div class="card" style="border-top: 4px solid #f59e0b;">
-                <h3 style="margin-top:0;">✍️ Manuel Tekli Öğrenci Ekleme</h3>
-                <div class="form-group"><label>Sınıf Adı (Örn: 5/A):</label><input type="text" id="m_sinif"></div>
-                <div style="display:flex; gap:10px;">
-                    <div class="form-group"><label>Okul No:</label><input type="number" id="m_no"></div>
+                <h3 style="margin-top:0; color:#d97706;">✍️ Tekli Manuel Öğrenci Ekleme</h3>
+                <div class="form-group"><label>Sınıfı / Şubesi (Örn: 6/B):</label><input type="text" id="m_sinif" placeholder="Örn: 6/B"></div>
+                <div class="form-group"><label>Okul Numarası:</label><input type="number" id="m_no"></div>
+                <div class="grid-2" style="gap:10px;">
                     <div class="form-group"><label>Adı:</label><input type="text" id="m_ad"></div>
                     <div class="form-group"><label>Soyadı:</label><input type="text" id="m_soyad"></div>
                 </div>
-                <button class="btn btn-orange" onclick="manuelEkle()">Öğrenciyi Sisteme Kaydet</button>
+                <button class="btn btn-orange" style="width:100%;" onclick="manuelOgrenciEkle()">Öğrenciyi Kaydet</button>
             </div>
         </div>
     </div>
 
-    <div id="tab_liste" class="tab-content">
+    <div id="tab_liste" class="tab-content no-print">
         <div class="card" style="border-top: 4px solid #10b981;">
-            <h3 style="margin-top:0; color:#047857;">📋 Sistemdeki Öğrenciler ve Düzenleme Araçları</h3>
-            
+            <h3 style="margin-top:0; color:#047857;">📋 Kayıtlı Öğrenci Listesi</h3>
             <div class="toolbar">
-                <div style="display:flex; gap:10px; align-items:flex-end;">
-                    <div>
-                        <label style="font-size:11px;">Hatalı Sınıf Adı:</label>
-                        <input type="text" id="toplu_eski_sinif" placeholder="Örn: 6B" style="padding:8px; width:120px;">
-                    </div>
-                    <div>
-                        <label style="font-size:11px;">Doğru Sınıf Adı:</label>
-                        <input type="text" id="toplu_yeni_sinif" placeholder="Örn: 6/B" style="padding:8px; width:120px;">
-                    </div>
-                    <button class="btn btn-blue btn-sm" style="padding:9px 15px;" onclick="topluSinifDuzelt()">Tüm Sınıfı Düzelt</button>
-                </div>
-                
-                <div>
-                    <button class="btn btn-red btn-sm" style="padding:9px 15px; font-size:13px;" onclick="tumOgrencileriSil()">⚠️ Tüm Okulu Sıfırla (Temizle)</button>
-                </div>
+                <span style="font-size:13.5px; color:#475569;">Yanlış yüklemeleri engellemek veya hatalı sınıfları düzeltmek için aşağıdaki paneli kullanabilirsiniz.</span>
+                <button class="btn btn-red btn-sm" onclick="okuluKomsil()">⚠️ Tüm Öğrenci Verilerini Sıfırla</button>
             </div>
-
-            <div style="max-height: 500px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 6px;">
+            <div style="max-height: 450px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
                 <table>
                     <thead><tr><th>No</th><th>Adı Soyadı</th><th>Cinsiyet</th><th>Sınıfı</th><th>İşlemler</th></tr></thead>
-                    <tbody id="tbl_ogrenciler"></tbody>
+                    <tbody id="tbl_ogrenciler_govde"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div id="tab_personel" class="tab-content">
+    <div id="tab_personel" class="tab-content no-print">
         <div class="grid-2">
             <div class="card" style="border-top: 4px solid #8b5cf6;">
-                <h3 style="margin-top:0;">👨‍🏫 Öğretmen Tanımla ve Şube Ata</h3>
-                <div class="form-group"><label>Adı Soyadı:</label><input type="text" id="p_ad"></div>
-                <div class="form-group"><label>Sisteme Giriş Şifresi:</label><input type="text" id="p_sifre"></div>
+                <h3 style="margin-top:0; color:#6d28d9;">👨‍🏫 Yeni Öğretmen Tanımlama & Yetkilendirme</h3>
+                <div class="form-group"><label>Adı Soyadı:</label><input type="text" id="p_ad_soyad"></div>
+                <div class="form-group"><label>Giriş Şifresi:</label><input type="text" id="p_sifre"></div>
                 <div class="form-group">
-                    <label>Sorumlu Olduğu Sınıflar:</label>
-                    <input type="text" id="p_siniflar" placeholder="Örn: 6/A, 6/B (Tüm okul için TÜMÜ yazın)" value="TÜMÜ">
+                    <label>Sorumlu Olduğu Şubeler (Virgülle Ayırın):</label>
+                    <input type="text" id="p_siniflar" value="TÜMÜ" placeholder="Örn: 5/A, 6/B">
+                    <small style="color:#64748b; display:block; margin-top:4px;">Öğretmenin takip ekranında sadece bu sınıfların eksik listesi görünür.</small>
                 </div>
-                <button class="btn btn-purple" style="background:#8b5cf6; color:white; width:100%; padding:10px; border:none; border-radius:5px; font-weight:bold; cursor:pointer;" onclick="ogretmenEkle()">Öğretmeni Sisteme Ekle</button>
+                <button class="btn btn-green" style="width:100%; background:#8b5cf6;" onclick="ogretmenEkle()">Öğretmeni Kaydet ve Yetkilendir</button>
             </div>
-            
             <div class="card">
-                <h3 style="margin-top:0;">Öğretmen Listesi</h3>
+                <h3 style="margin-top:0; color:#1e3a8a;">Sistemdeki Öğretmenler</h3>
                 <table>
-                    <thead><tr><th>Adı Soyadı (Şifre)</th><th>Atanan Şubeler</th><th>İşlem</th></tr></thead>
-                    <tbody id="tbl_ogretmen"></tbody>
+                    <thead><tr><th>Öğretmen Adı</th><th>Atanan Şubeler</th><th>İşlem</th></tr></thead>
+                    <tbody id="tbl_ogretmenler_govde"></tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <div id="tab_takip" class="tab-content no-print">
+        <div class="card" style="border-left: 5px solid #ef4444;">
+            <h3 style="margin-top:0; color:#b91c1c;">🚨 Şube Bazlı Eksik Veri Girişi Takip Ekranı</h3>
+            <p style="font-size:13px; color:#64748b;">Mevcuduna göre eksik anket dolduran şubeler ve doldurma sayıları anlık listelenir.</p>
+            <table>
+                <thead><tr><th>Sınıf Adı</th><th>Sınıf Mevcudu</th><th>Dolduran Öğrenci</th><th>Dolduran Veli</th></tr></thead>
+                <tbody id="tbl_takip_govde"></tbody>
+            </table>
         </div>
     </div>
 
     <div id="tab_rapor" class="tab-content">
-        <div class="card" style="border-left: 5px solid #ef4444;">
-            <h3 style="margin-top:0; color:#ef4444;">Katılımı Eksik Kalan Sınıflar Radarı</h3>
-            <table><thead><tr><th>Sınıf Adı</th><th>Sınıf Mevcudu</th><th>Dolduran Öğrenci</th><th>Dolduran Veli</th></tr></thead><tbody id="okul_eksik_siniflar"></tbody></table>
+        <div class="card no-print" style="border-top: 4px solid #1e3a8a;">
+            <h3 style="margin-top:0; color:#1e3a8a;">📊 MEB Çıktı Standardında Raporlama Alanı</h3>
+            <div style="display:flex; gap:15px; align-items: flex-end;">
+                <div style="flex:1;">
+                    <label>Rapor Filtre Kapsamı:</label>
+                    <select id="rapor_sinif_filtre" onchange="mebRaporuGetir()">
+                        <option value="">🏫 Tüm Okul Geneli Sonuç Çizelgesi</option>
+                    </select>
+                </div>
+                <button class="btn btn-green" onclick="raporExcelIndir()">📥 Excel Çıktısı Al</button>
+                <button class="btn btn-blue" onclick="window.print()">🖨️ PDF / Yazdır</button>
+            </div>
+        </div>
+
+        <div id="yazdirilacak_alan" class="card">
+            <h2 id="rapor_dinamik_baslik" style="text-align:center; color:#1e3a8a; margin-top:0; border-bottom: 2px solid #1e3a8a; padding-bottom:10px;">Okul Geneli RİBA Sonuç Çizelgesi</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:8%;">Sıra</th>
+                        <th style="width:52%;">Rehberlik İhtiyacı / Hedef Alanı</th>
+                        <th style="text-align:center; width:13%;">Öğrenci (f)</th>
+                        <th style="text-align:center; width:13%;">Veli (f)</th>
+                        <th style="text-align:center; width:14%; background:#e0f2fe;">ASP Puanı</th>
+                    </tr>
+                </thead>
+                <tbody id="tbl_meb_rapor_govde"></tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<div id="editModal" class="modal">
+<div id="editModal" class="modal no-print">
     <div class="modal-content">
-        <h3 style="margin-top:0; color:#1e3a8a; border-bottom:2px solid #e2e8f0; padding-bottom:10px;">✏️ Öğrenci Bilgilerini Düzenle</h3>
-        <input type="hidden" id="edit_id">
-        <div class="form-group"><label>Okul No:</label><input type="number" id="edit_no"></div>
-        <div style="display:flex; gap:10px;">
-            <div class="form-group" style="flex:1;"><label>Adı:</label><input type="text" id="edit_ad"></div>
-            <div class="form-group" style="flex:1;"><label>Soyadı:</label><input type="text" id="edit_soyad"></div>
-        </div>
-        <div class="form-group"><label>Cinsiyeti:</label><input type="text" id="edit_cinsiyet"></div>
-        <div class="form-group"><label>Sınıfı:</label><input type="text" id="edit_sinif"></div>
-        
+        <h3 style="margin-top:0; color:#1e3a8a; border-bottom: 2px solid #e2e8f0; padding-bottom:8px;">✏️ Öğrenci Kaydı Güncelle</h3>
+        <input type="hidden" id="modal_ogr_id">
+        <div class="form-group"><label>Okul No:</label><input type="number" id="modal_ogr_no"></div>
+        <div class="form-group"><label>Adı:</label><input type="text" id="modal_ogr_ad"></div>
+        <div class="form-group"><label>Soyadı:</label><input type="text" id="modal_ogr_soyad"></div>
+        <div class="form-group"><label>Sınıfı (Şubesi):</label><input type="text" id="modal_ogr_sinif"></div>
         <div style="display:flex; gap:10px; margin-top:20px;">
-            <button class="btn btn-blue" onclick="ogrenciGuncelle()">Değişiklikleri Kaydet</button>
-            <button class="btn btn-dark" onclick="document.getElementById('editModal').style.display='none'">İptal Et</button>
+            <button class="btn btn-blue" style="flex:1;" onclick="ogrenciKaydetGuncelle()">Değişiklikleri Uygula</button>
+            <button class="btn btn-dark" onclick="document.getElementById('editModal').style.display='none'">İptal</button>
         </div>
     </div>
+</div>
+
+<div class="footer no-print">
+    Sistem Tasarımı ve Entegrasyonu Üst Yöneticisi: Sıraç AKSAN &copy; 2026
 </div>
 
 <script>
+let hafizaOgrenciler = [];
+
 function sekmeAc(id) {
     document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -173,141 +205,145 @@ function sekmeAc(id) {
     event.currentTarget.classList.add('active');
 }
 
-// === 1. ŞABLON YÜKLEME VE EKLEME ===
-function topluYukle() {
-    const d = document.getElementById('eo_dosya');
-    if(d.files.length === 0) { alert('Lütfen dosyayı seçin!'); return; }
-    const fd = new FormData(); fd.append('file', d.files[0]); 
-    document.querySelector('#tab_ogrenci .btn-blue').innerText = "Yükleniyor, lütfen bekleyin...";
-    fetch('/api/sablon-liste-yukle', {method:'POST', body:fd}).then(r=>r.json()).then(data=>{ 
-        alert(data.mesaj); d.value = ''; 
-        document.querySelector('#tab_ogrenci .btn-blue').innerText = "Dosyayı İşle ve Sisteme Aktar";
+function topluOgrenciYukle() {
+    const selector = document.getElementById('dosya_secici');
+    if(selector.files.length === 0) return alert('Lütfen yüklemek istediğiniz dosyayı seçin.');
+    
+    const fd = new FormData(); fd.append('file', selector.files[0]);
+    alert('Veriler doğrulanıyor, lütfen bekleyin...');
+    fetch('/api/sablon-liste-yukle', { method: 'POST', body: fd }).then(r=>r.json()).then(data => {
+        alert(data.mesaj); selector.value = '';
     });
 }
-function manuelEkle() {
-    const v = { sinif_adi: document.getElementById('m_sinif').value, okul_no: document.getElementById('m_no').value, ad: document.getElementById('m_ad').value, soyad: document.getElementById('m_soyad').value };
-    fetch('/api/okul/ogrenci-ekle-manuel', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(v)})
-    .then(r=>r.json()).then(d=>{alert(d.mesaj);});
-}
 
-// === 2. ÖĞRENCİ LİSTESİ VE DÜZENLEME İŞLEMLERİ ===
-let tumOgrencilerHafiza = []; // Toplu işlemler için listeyi hafızada tutuyoruz
+function manuelOgrenciEkle() {
+    const payload = {
+        sinif_adi: document.getElementById('m_sinif').value.trim(),
+        okul_no: document.getElementById('m_no').value.trim(),
+        ad: document.getElementById('m_ad').value.trim(),
+        soyad: document.getElementById('m_soyad').value.trim()
+    };
+    if(!payload.sinif_adi || !payload.okul_no || !payload.ad) return alert('Lütfen gerekli alanları doldurunuz.');
+    
+    fetch('/api/okul/ogrenci-ekle-manuel', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload) })
+    .then(r=>r.json()).then(data => { alert(data.mesaj); document.getElementById('m_no').value=''; document.getElementById('m_ad').value=''; document.getElementById('m_soyad').value=''; });
+}
 
 function ogrenciListesiniGetir() {
-    document.getElementById('tbl_ogrenciler').innerHTML = "<tr><td colspan='5'>Yükleniyor...</td></tr>";
-    fetch('/api/okul/ogrencileri-getir').then(r=>r.json()).then(d=>{
-        tumOgrencilerHafiza = d;
-        let h = ''; 
-        if(d.length === 0) h = "<tr><td colspan='5' style='text-align:center;'>Sistemde kayıtlı öğrenci yok.</td></tr>";
-        d.forEach(o => { 
-            const sinif = o.siniflar ? o.siniflar.sinif_adi : 'Belirsiz';
-            h += `<tr>
-                <td>${o.okul_no}</td><td><b>${o.ad} ${o.soyad}</b></td><td>${o.cinsiyet}</td><td><b>${sinif}</b></td>
+    fetch('/api/okul/ogrencileri-getir').then(r=>r.json()).then(data => {
+        hafizaOgrenciler = data;
+        let html = '';
+        data.forEach(o => {
+            let sAdi = o.siniflar ? o.siniflar.sinif_adi : 'Belirsiz';
+            html += `<tr>
+                <td>${o.okul_no}</td><td><b>${o.ad} ${o.soyad}</b></td><td>${o.cinsiyet || 'Belirtilmemiş'}</td><td><b>${sAdi}</b></td>
                 <td>
-                    <button class="btn btn-orange btn-sm" onclick="modalAc(${o.id}, ${o.okul_no}, '${o.ad}', '${o.soyad}', '${o.cinsiyet}', '${sinif}')">Düzenle</button>
+                    <button class="btn btn-orange btn-sm" onclick="modalAc(${o.id}, ${o.okul_no}, '${o.ad}', '${o.soyad}', '${sAdi}')">Düzenle</button>
                     <button class="btn btn-red btn-sm" onclick="ogrenciSil(${o.id})">Sil</button>
                 </td>
-            </tr>`; 
+            </tr>`;
         });
-        document.getElementById('tbl_ogrenciler').innerHTML = h;
+        document.getElementById('tbl_ogrenciler_govde').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">Kayıtlı öğrenci bulunamadı.</td></tr>';
     });
 }
 
-function modalAc(id, no, ad, soyad, cins, sinif) {
-    document.getElementById('edit_id').value = id; document.getElementById('edit_no').value = no;
-    document.getElementById('edit_ad').value = ad; document.getElementById('edit_soyad').value = soyad;
-    document.getElementById('edit_cinsiyet').value = cins; document.getElementById('edit_sinif').value = sinif;
+function modalAc(id, no, ad, soyad, sinif) {
+    document.getElementById('modal_ogr_id').value = id; document.getElementById('modal_ogr_no').value = no;
+    document.getElementById('modal_ogr_ad').value = ad; document.getElementById('modal_ogr_soyad').value = soyad;
+    document.getElementById('modal_ogr_sinif').value = sinif;
     document.getElementById('editModal').style.display = 'block';
 }
 
-function ogrenciGuncelle() {
-    const id = document.getElementById('edit_id').value;
-    const v = { okul_no: document.getElementById('edit_no').value, ad: document.getElementById('edit_ad').value, soyad: document.getElementById('edit_soyad').value, cinsiyet: document.getElementById('edit_cinsiyet').value, sinif_adi: document.getElementById('edit_sinif').value };
-    fetch(`/api/okul/ogrenci-guncelle/${id}`, {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(v)})
-    .then(r=>r.json()).then(d=>{ alert(d.mesaj); document.getElementById('editModal').style.display='none'; ogrenciListesiniGetir(); });
+function ogrenciKaydetGuncelle() {
+    const id = document.getElementById('modal_ogr_id').value;
+    const p = { okul_no: document.getElementById('modal_ogr_no').value, ad: document.getElementById('modal_ogr_ad').value, soyad: document.getElementById('modal_ogr_soyad').value, cinsiyet: 'Belirtilmemiş', sinif_adi: document.getElementById('modal_ogr_sinif').value };
+    fetch(`/api/okul/ogrenci-guncelle/${id}`, { method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(p) })
+    .then(r=>r.json()).then(d => { alert(d.mesaj); document.getElementById('editModal').style.display='none'; ogrenciListesiniGetir(); });
 }
 
 function ogrenciSil(id) {
-    if(confirm("Öğrenciyi silmek istediğinize emin misiniz?")) {
-        fetch(`/api/okul/ogrenci-sil/${id}`, {method:'DELETE'}).then(()=>ogrenciListesiniGetir());
+    if(confirm('Seçilen öğrenci veritabanından kalıcı olarak silinecektir. Onaylıyor musunuz?')) {
+        fetch(`/api/okul/ogrenci-sil/${id}`, { method: 'DELETE' }).then(() => ogrenciListesiniGetir());
     }
 }
 
-// 🔥 YENİ: IŞIK HIZINDA TOPLU SINIF DÜZELTME MOTORU 🔥
-function topluSinifDuzelt() {
-    let eski = document.getElementById('toplu_eski_sinif').value.trim();
-    let yeni = document.getElementById('toplu_yeni_sinif').value.trim();
+function okuluKomsil() {
+    if(hafizaOgrenciler.length === 0) return alert('Silinecek veri bulunamadı.');
+    if(!confirm('⚠️ DİKKAT: Okuldaki tüm öğrencileri tek seferde silmek üzeresiniz. Bu işlem geri alınamaz. Onaylıyor musunuz?')) return;
     
-    if(!eski || !yeni) return alert("Lütfen hem eski sınıf adını hem de yeni sınıf adını kutulara yazın.");
-    
-    let degisecekler = tumOgrencilerHafiza.filter(o => o.siniflar && o.siniflar.sinif_adi === eski);
-    if(degisecekler.length === 0) return alert(`Sistemde '${eski}' adında bir sınıf bulunamadı. Lütfen listedeki yazılışını kontrol edin.`);
-    
-    if(!confirm(`DİKKAT: '${eski}' sınıfındaki toplam ${degisecekler.length} öğrencinin sınıfı '${yeni}' olarak değiştirilecek. Onaylıyor musunuz?`)) return;
-    
-    alert(`Toplu güncelleme yapılıyor, lütfen bekleyin... (Bu işlem anında bitecektir)`);
-    
-    // Öğrencilerin sadece ID numaralarını bir koliye (Array) dolduruyoruz
-    let idListesi = degisecekler.map(o => o.id);
+    let idlerListesi = hafizaOgrenciler.map(o => o.id);
+    fetch('/api/okul/ogrenci-toplu-sil', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ idler: idlerListesi }) })
+    .then(r=>r.json()).then(d => { alert(d.mesaj); ogrenciListesiniGetir(); });
+}
 
-    // Tek bir istek atıyoruz!
-    fetch('/api/okul/ogrenci-toplu-sinif-guncelle', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({idler: idListesi, yeni_sinif_adi: yeni})
-    }).then(r=>r.json()).then(d => {
-        alert(d.mesaj);
-        document.getElementById('toplu_eski_sinif').value = '';
-        document.getElementById('toplu_yeni_sinif').value = '';
-        ogrenciListesiniGetir();
+function ogretmenListesiGetir() {
+    fetch('/api/okul/ogretmenleri-getir').then(r=>r.json()).then(data => {
+        let html = '';
+        data.forEach(p => {
+            html += `<tr><td><b>${p.ad_soyad}</b><br><small style="color:#64748b;">Şifre: ${p.sifre}</small></td><td><b>${p.atanan_siniflar}</b></td><td><button class="btn btn-red btn-sm" onclick="ogretmenSil(${p.id})">Sil</button></td></tr>`;
+        });
+        document.getElementById('tbl_ogretmenler_govde').innerHTML = html || '<tr><td colspan="3" style="text-align:center;">Öğretmen kaydı bulunmuyor.</td></tr>';
     });
 }
 
-// 🔥 YENİ: IŞIK HIZINDA TÜM OKULU SIFIRLAMA MOTORU 🔥
-function tumOgrencileriSil() {
-    if(tumOgrencilerHafiza.length === 0) return alert("Silinecek öğrenci yok.");
-    if(!confirm("⚠️ DİKKAT! Okuldaki tüm öğrenciler ve anket sonuçları kalıcı olarak SİLİNECEK. Emin misiniz?")) return;
-    if(!confirm("BU İŞLEM GERİ ALINAMAZ! Son kez onaylıyor musunuz?")) return;
-    
-    alert("Tüm veriler tek bir koli olarak çöpe atılıyor, lütfen bekleyin...");
-    
-    // Tüm öğrencilerin ID'lerini koliye koy
-    let idListesi = tumOgrencilerHafiza.map(o => o.id);
-    
-    // Tek bir istek fırlat!
-    fetch('/api/okul/ogrenci-toplu-sil', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({idler: idListesi})
-    }).then(r=>r.json()).then(d => {
-        alert(d.mesaj);
-        ogrenciListesiniGetir();
-    });
-}
-// === 3. ÖĞRETMEN YÖNETİMİ ===
-function ogrGetir() {
-    fetch('/api/okul/ogretmenleri-getir').then(r=>r.json()).then(d=>{
-        let h = ''; d.forEach(o => { h += `<tr><td><b>${o.ad_soyad}</b><br><small>Şifre: ${o.sifre}</small></td><td>${o.atanan_siniflar || 'TÜMÜ'}</td><td><button class="btn btn-red btn-sm" onclick="ogretmenSil(${o.id})">Sil</button></td></tr>`; });
-        document.getElementById('tbl_ogretmen').innerHTML = h;
-    });
-}
 function ogretmenEkle() {
-    const v = { ad_soyad: document.getElementById('p_ad').value, sifre: document.getElementById('p_sifre').value, atanan_siniflar: document.getElementById('p_siniflar').value };
-    fetch('/api/okul/ogretmen-ekle', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(v)})
-    .then(r=>r.json()).then(d=>{alert(d.mesaj); ogrGetir();});
-}
-function ogretmenSil(id) {
-    if(confirm("Silmek istediğinize emin misiniz?")) fetch(`/api/okul/ogretmen-sil/${id}`, {method:'DELETE'}).then(()=>ogrGetir());
+    const p = { ad_soyad: document.getElementById('p_ad_soyad').value.trim(), sifre: document.getElementById('p_sifre').value.trim(), atanan_siniflar: document.getElementById('p_siniflar').value.trim() };
+    if(!p.ad_soyad || !p.sifre) return alert('Lütfen isim ve şifre giriniz.');
+    fetch('/api/okul/ogretmen-ekle', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(p) })
+    .then(r=>r.json()).then(d => { alert(d.mesaj); document.getElementById('p_ad_soyad').value=''; document.getElementById('p_sifre').value=''; ogretmenListesiGetir(); });
 }
 
-// === 4. KATILIM RADARI ===
-function okulEksikGetir() {
+function ogretmenSil(id) {
+    if(confirm('Öğretmen yetkisi iptal edilecektir. Onaylıyor musunuz?')) {
+        fetch(`/api/okul/ogretmen-sil/${id}`, { method: 'DELETE' }).then(() => ogretmenListesiGetir());
+    }
+}
+
+// 🎯 HATA DÜZELTİLDİ: Fonksiyon ismi bitişik yazıldı
+function katDurumuGetir() {
     fetch('/api/takip/katilim-durumu').then(r=>r.json()).then(d => {
-        let h = '';
-        if(d.eksik_siniflar.length === 0) h = '<tr><td colspan="4" style="text-align:center;">Henüz veri yok veya herkes katıldı.</td></tr>';
-        else d.eksik_siniflar.forEach(s => { h += `<tr><td><b>${s.sinif_adi}</b></td><td>${s.mevcut} Kişi</td><td style="color:red">${s.ogrenci_katilim}</td><td style="color:red">${s.veli_katilim}</td></tr>`; });
-        document.getElementById('okul_eksik_siniflar').innerHTML = h;
+        let html = '';
+        if(d.eksik_siniflar.length === 0) html = '<tr><td colspan="4" style="text-align:center; color:green; font-weight:bold;">Tüm sınıfların veri girişleri eksiksiz tamamlanmıştır!</td></tr>';
+        else {
+            d.eksik_siniflar.forEach(s => {
+                html += `<tr><td><b>${s.sinif_adi}</b></td><td>${s.mevcut}</td><td style="color:#b91c1c; font-weight:bold;">${s.ogrenci_katilim}</td><td style="color:#b91c1c; font-weight:bold;">${s.veli_katilim}</td></tr>`;
+            });
+        }
+        document.getElementById('tbl_takip_govde').innerHTML = html;
     });
+}
+
+function raporSecenekleriniYukle() {
+    fetch('/api/rapor/sinif-listesi').then(r=>r.json()).then(data => {
+        let options = '<option value="">🏫 Tüm Okul Geneli Sonuç Çizelgesi</option>';
+        data.forEach(s => options += `<option value="${s}">Sınıf Çizelgesi: ${s}</option>`);
+        document.getElementById('rapor_sinif_filtre').innerHTML = options;
+        mebRaporuGetir();
+    });
+}
+
+function mebRaporuGetir() {
+    let sinif = document.getElementById('rapor_sinif_filtre').value;
+    document.getElementById('rapor_dinamik_baslik').innerText = sinif ? `${sinif} Sınıfı RİBA Sonuç Çizelgesi` : "Okul Geneli RİBA Sonuç Çizelgesi";
+    
+    fetch(`/api/rapor/analiz-veri?sinif_adi=${encodeURIComponent(sinif)}`).then(r=>r.json()).then(data => {
+        let html = '';
+        data.forEach((m, index) => {
+            html += `<tr>
+                <td style="text-align:center;"><b>${index + 1}</b></td>
+                <td><b>${m.hedef_adi}</b></td>
+                <td style="text-align:center;">${m.ogrenci_f || 0}</td>
+                <td style="text-align:center;">${m.veli_f || 0}</td>
+                <td style="text-align:center; font-weight:bold; background:#f0f9ff; color:#0369a1; font-size:15px;">${m.asp}</td>
+            </tr>`;
+        });
+        document.getElementById('tbl_meb_rapor_govde').innerHTML = html;
+    });
+}
+
+function raporExcelIndir() {
+    let sinif = document.getElementById('rapor_sinif_filtre').value;
+    window.location.href = `/api/rapor/excel-indir?sinif_adi=${encodeURIComponent(sinif)}`;
 }
 </script>
 </body>
